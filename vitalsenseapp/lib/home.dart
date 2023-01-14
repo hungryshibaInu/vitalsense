@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,52 +16,35 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset("images/Vector.png"),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Padding(
-                padding: EdgeInsets.only(left: 40, right: 40, top: 20),
-                child: Text(
-                  "Email:",
-                  style: TextStyle(color: Colors.black, fontSize: 20),
-                ),
+          Container(
+              margin: EdgeInsets.only(top: 15.0, bottom: 40.0),
+              color: Colors.amber,
+              width: 230,
+              height: 230),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.all(15.0),
+                color: Colors.amber,
+                width: 90,
+                height: 150,
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Email",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(50),
-                      ),
-                    ),
-                  ),
-                ),
+              Container(
+                margin: EdgeInsets.all(15.0),
+                color: Colors.amber,
+                width: 90,
+                height: 150,
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 40, right: 40, top: 10),
-                child: Text(
-                  "Password:",
-                  style: TextStyle(color: Colors.black, fontSize: 20),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Password",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(50),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              Container(
+                margin: EdgeInsets.all(15.0),
+                color: Colors.amber,
+                width: 90,
+                height: 150,
+              )
             ],
-          ),
+          )
         ],
       ),
     );
