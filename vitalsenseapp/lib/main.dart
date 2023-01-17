@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 import 'home.dart';
 import 'test.dart';
+import 'register.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Color(0xFFFFF9F3),
       ),
       // home: const Login(),
-      home: const MyWidget(),
+      home: RegisterForm(),
     );
   }
 }
