@@ -135,6 +135,25 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                   ),
                   Padding(
+                    padding: EdgeInsets.only(left: 40, right: 310, top: 10),
+                    child: Text(
+                      "Email:",
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 40, right: 200),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(50),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
                     padding: EdgeInsets.only(left: 40, right: 280, top: 10),
                     child: Text(
                       "Password:",
