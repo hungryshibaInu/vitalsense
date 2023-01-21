@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:vitalsenseapp/register.dart';
+import 'package:vitalsenseapp/test.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/src/widgets/icon.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -57,6 +61,20 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 40, right: 40, top: 30),
+                child: FloatingActionButton(
+                  backgroundColor: Colors.amberAccent,
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 35,
+                    color: Colors.black,),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                    child: const Text('sign up'),
                 ),
               ),
             ],
