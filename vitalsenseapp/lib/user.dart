@@ -1,10 +1,14 @@
-abstract class Userinfo{
-  String fname;
-  String lname;
+
+/*class UserInfo {
+  String firstname;
+  String lastname;
   String phone;
+  String dob;
   String gender;
   String email;
   String password;
 
-  Userinfo({this.phone, this.lname, this.phone, this.gender,this.email, this.password});
-}
+  UserInfo() {
+
+  }
+}*/

@@ -33,6 +33,7 @@ class _LoginState extends State<Login> {
               Padding(
                 padding: EdgeInsets.only(left: 40, right: 40),
                 child: TextField(
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     hintText: "Email",
                     border: OutlineInputBorder(
@@ -53,6 +54,7 @@ class _LoginState extends State<Login> {
               Padding(
                 padding: EdgeInsets.only(left: 40, right: 40),
                 child: TextField(
+                  obscureText: true,
                   decoration: InputDecoration(
                     hintText: "Password",
                     border: OutlineInputBorder(
@@ -63,20 +65,26 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 40, right: 40, top: 30),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.amberAccent,
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 35,
-                    color: Colors.black,),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                    child: const Text('sign up'),
-                ),
-              ),
+              /*Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 40, right: 40, top: 30),
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.amberAccent,
+                    child: Icon(
+                      Icons.start,
+                      size: 35,
+                      color: Colors.black,),
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context){
+                        return MyWidget();
+                        })
+                      );
+                     },
+                    ),
+                  ),
+                ),*/
             ],
           ),
         ],
