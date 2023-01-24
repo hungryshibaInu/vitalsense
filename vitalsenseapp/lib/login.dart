@@ -46,6 +46,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
+
               Padding(
                 padding: EdgeInsets.only(left: 40, right: 40, top: 10),
                 child: Text(
@@ -53,6 +54,7 @@ class _LoginState extends State<Login> {
                   style: TextStyle(color: Colors.black, fontSize: 20),
                 ),
               ),
+
               Padding(
                 padding: EdgeInsets.only(left: 40, right: 40),
                 child: TextField(
@@ -67,33 +69,18 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 40, top: 30),
+
+                Container(
+                  alignment: Alignment.bottomCenter,
+                    height: 90,
+                    padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
                     child: FloatingActionButton(
                       backgroundColor: Colors.amberAccent,
                       child: Icon(
-                        Icons.account_circle,
+                        Icons.play_arrow_outlined,
                         size: 35,
                         color: Colors.black,
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 40, top: 30),
-                    child: FloatingActionButton(
-                      backgroundColor: Colors.amberAccent,
-                      child: Icon(
-                        Icons.login,
-                        size: 35,
-                        color: Colors.black,),
                       onPressed: () {
                         Navigator.push(
                             context,
@@ -101,7 +88,24 @@ class _LoginState extends State<Login> {
                                 builder: (context) => const MyWidget()));
                       },
                     ),
-                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    const Text('Does not have account?'),
+                    TextButton(
+                      child: const Text(
+                        'Sign in',
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const RegisterForm()));
+                      },
+                    )
+                  ],
+                  mainAxisAlignment: MainAxisAlignment.center,
                 ),
               ],
             ),

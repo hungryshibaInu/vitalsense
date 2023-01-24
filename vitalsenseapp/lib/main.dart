@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Color(0xFFFFF9F3),
       ),
       // home: const Login(),
-      home: RegisterForm(),
+      home: Login(),
     );
   }
 }

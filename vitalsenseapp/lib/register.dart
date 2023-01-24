@@ -46,6 +46,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       ),
                     ),
                   ),
+
                   Padding(
                     padding: EdgeInsets.only(left: 40, right: 280, top: 10),
                     child: Text(
@@ -109,6 +110,7 @@ class _RegisterFormState extends State<RegisterForm> {
                            });
                          },
                 ),*/
+
                   Padding(
                     padding: EdgeInsets.only(left: 40, right: 310, top: 10),
                     child: Text(
@@ -130,6 +132,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       ),
                     ),
                   ),
+
                   Padding(
                     padding: EdgeInsets.only(left: 40, right: 310, top: 10),
                     child: Text(
@@ -150,6 +153,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       ),
                     ),
                   ),
+
                   Padding(
                     padding: EdgeInsets.only(left: 40, right: 320, top: 10),
                     child: Text(
@@ -194,24 +198,22 @@ class _RegisterFormState extends State<RegisterForm> {
                   ),
 
                   Align(
-                    alignment: Alignment.bottomRight,
+                    alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40, top: 30),
-                        child: FloatingActionButton(
-                          backgroundColor: Colors.amberAccent,
-                          child: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 35,
-                              color: Colors.black,),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Login()));
+                      padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.amberAccent,
+                        child: Icon(
+                          Icons.check_circle,
+                          size: 30,
+                          color: Colors.black,
+                          ),
+                        onPressed: () {
+                          Navigator.pop(context);
                           },
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               )
