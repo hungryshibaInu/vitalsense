@@ -160,9 +160,9 @@ class _LoginState extends State<Login> {
                               const Text('Does not have account?'),
                               TextButton(
                                 child: const Text(
-                                  'Sign in',
+                                  'sign up',
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 20),
+                                      color: Colors.black, fontSize: 15),
                                 ),
                                 onPressed: () {
                                   Navigator.push(

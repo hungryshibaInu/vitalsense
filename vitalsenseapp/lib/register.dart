@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:vitalsenseapp/login.dart';
 import 'package:vitalsenseapp/model/profile.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -25,7 +27,8 @@ class _RegisterFormState extends State<RegisterForm> {
       email: '',
       password: '');
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
-
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection("users");
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -174,7 +177,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                           "Enter your mobile phone. example '099999876'"),
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
-                                    hintText: "phone number 10 digits",
+                                    hintText: "Phone number 10 digits",
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(50),
@@ -288,6 +291,15 @@ class _RegisterFormState extends State<RegisterForm> {
                                       onPressed: () async {
                                         if (formKey.currentState!.validate()) {
                                           formKey.currentState?.save();
+                                          /*await _userCollection.add({
+                                            "firstname": profile.firstname,
+                                            "lastname": profile.lastname,
+                                            "birthday": profile.dob,
+                                            "gender": profile.gender,
+                                            "phone": profile.phone,
+                                            "email": profile.email,
+                                            "password": profile.password,
+                                          });*/
                                           try {
                                             await FirebaseAuth.instance
                                                 .createUserWithEmailAndPassword(
@@ -313,10 +325,32 @@ class _RegisterFormState extends State<RegisterForm> {
                                       backgroundColor: Colors.teal,
                                       child: const Icon(
                                         Icons.check_circle,
-                                        size: 30,
+                                        size: 25,
                                         color: Colors.black,
                                       ),
                                     )),
+                                    const Text(
+                                      'if already have account click yellow button',
+                                      style: TextStyle(
+                                          color: Colors.black45, fontSize: 11),
+                                    ),
+                                    Expanded(
+                                      child: FloatingActionButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const Login()));
+                                        },
+                                        backgroundColor: Colors.amberAccent,
+                                        child: Icon(
+                                          Icons.play_arrow_outlined,
+                                          size: 35,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
                                   ]))
                             ],
                           ),
