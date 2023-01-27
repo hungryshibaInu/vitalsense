@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:vitalsenseapp/login.dart';
-import 'package:flutter/src/widgets/icon.dart';
-import 'package:vitalsenseapp/user.dart';
+import 'package:vitalsenseapp/model/profile.dart';
+
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({Key? key}) : super(key: key);
@@ -14,19 +13,20 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   //late DateTime _dateTime;
   final registerKey = GlobalKey<FormState>();
-  //UserInfo users = UserInfo();
+  Profile profile = Profile(firstname: '', lastname: '',  gender: '', phone: '', dob: '', email: '', password: '');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-            padding: EdgeInsets.only(left: 0, right: 60),
+            padding: const EdgeInsets.only(left: 20, right: 40),
             child: Form(
               key: registerKey,
               child:SingleChildScrollView(
               child: Column(
                 children: [
                   Image.asset("assets/images/Vector.png"),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 40, right: 280, top: 10),
                     child: Text(
                       "Firstname:",
@@ -34,9 +34,9 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 40, right: 200),
-                    child: TextField(
-                      decoration: InputDecoration(
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
                         hintText: "Firstname",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -44,25 +44,23 @@ class _RegisterFormState extends State<RegisterForm> {
                           ),
                         ),
                       ),
+                      onSaved: (String? firstname){
+                        profile.firstname = firstname!;
+                      },
                     ),
                   ),
 
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 40, right: 280, top: 10),
                     child: Text(
                       "Lastname:",
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                   ),
-                  /*TextFormField(
-                    onSaved: (String lname){
-                      users.lname = lname;
-                    },
-                  ),*/
                   Padding(
-                    padding: EdgeInsets.only(left: 40, right:200),
-                    child: TextField(
-                      decoration: InputDecoration(
+                    padding: const EdgeInsets.only(left: 40, right:40),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
                         hintText: "Lastname",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -70,20 +68,23 @@ class _RegisterFormState extends State<RegisterForm> {
                           ),
                         ),
                       ),
+                      onSaved: (String? lastname){
+                        profile.lastname = lastname!;
+                      },
                     ),
                   ),
 
-                  Padding(
-                    padding: EdgeInsets.only(left: 40, right: 270, top: 10),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 40, right: 260, top: 10),
                     child: Text(
                       "Date Of Birth:",
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 40, right:200),
-                    child: TextField(
-                      decoration: InputDecoration(
+                    padding: const EdgeInsets.only(left: 40, right:40),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
                         hintText: "Date of Birth",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -91,6 +92,9 @@ class _RegisterFormState extends State<RegisterForm> {
                           ),
                         ),
                       ),
+                      onSaved: (String? dob){
+                        profile.dob = dob!;
+                      },
                     ),
                   ),
                   /*ElevatedButton(
@@ -111,7 +115,7 @@ class _RegisterFormState extends State<RegisterForm> {
                          },
                 ),*/
 
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 40, right: 310, top: 10),
                     child: Text(
                       "Phone:",
@@ -119,10 +123,10 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 40, right: 200),
-                    child: TextField(
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    child: TextFormField(
                       keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: "Phone Number",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -130,10 +134,13 @@ class _RegisterFormState extends State<RegisterForm> {
                           ),
                         ),
                       ),
+                      onSaved: (String? phone){
+                        profile.phone = phone!;
+                      },
                     ),
                   ),
 
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 40, right: 310, top: 10),
                     child: Text(
                       "Gender:",
@@ -141,9 +148,9 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 40, right: 200),
-                    child: TextField(
-                      decoration: InputDecoration(
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
                         hintText: "Gender",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -151,10 +158,13 @@ class _RegisterFormState extends State<RegisterForm> {
                           ),
                         ),
                       ),
+                      onSaved: (String? gender){
+                        profile.gender = gender!;
+                      },
                     ),
                   ),
 
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 40, right: 320, top: 10),
                     child: Text(
                       "Email:",
@@ -162,10 +172,11 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 40, right: 200),
-                    child: TextField(
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    child: TextFormField(
                       keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
+
+                      decoration: const InputDecoration(
                         hintText: "Email",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -173,9 +184,12 @@ class _RegisterFormState extends State<RegisterForm> {
                           ),
                         ),
                       ),
+                      onSaved: (String? email){
+                        profile.email = email!;
+                      },
                     ),
                   ),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 40, right: 280, top: 10),
                     child: Text(
                       "Password:",
@@ -183,10 +197,10 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 40, right: 200),
-                    child: TextField(
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                    child: TextFormField(
                       obscureText: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: "Password",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -194,26 +208,36 @@ class _RegisterFormState extends State<RegisterForm> {
                           ),
                         ),
                       ),
+                      onSaved: (String? password){
+                        profile.password = password!;
+                      },
                     ),
                   ),
-
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.amberAccent,
-                        child: Icon(
-                          Icons.check_circle,
-                          size: 30,
-                          color: Colors.black,
-                          ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          },
-                        ),
-                      ),
-                    ),
+                  SizedBox(
+                      height: 100,
+                      child: Row(
+                          children : <Widget>[
+                            Expanded(
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    registerKey.currentState?.save();
+                                    if (kDebugMode) {
+                                      print("firstname = ${profile.firstname} lastname = ${profile.lastname}  gender = ${profile.gender} dob = ${profile.dob} phone = ${profile.phone} email = ${profile.email} password =  ${profile.password}");
+                                    }
+                                    registerKey.currentState?.reset();
+                                    Navigator.pop(context);
+                                  },
+                                  backgroundColor: Colors.teal,
+                                  child: const Icon(
+                                    Icons.check_circle,
+                                    size: 30,
+                                    color: Colors.black,
+                                  ),
+                                )
+                            ),
+                          ]
+                      )
+                  )
                   ],
                 ),
               )
