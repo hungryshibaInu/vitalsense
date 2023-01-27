@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:vitalsenseapp/model/profile.dart';
 
 
@@ -36,6 +37,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
+                      validator:RequiredValidator(errorText: "Please enter your firstname example 'John'"),
                       decoration: const InputDecoration(
                         hintText: "Firstname",
                         border: OutlineInputBorder(
@@ -60,6 +62,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right:40),
                     child: TextFormField(
+                      validator:RequiredValidator(errorText: "Please enter your lastname example 'Kyle"),
                       decoration: const InputDecoration(
                         hintText: "Lastname",
                         border: OutlineInputBorder(
@@ -75,17 +78,18 @@ class _RegisterFormState extends State<RegisterForm> {
                   ),
 
                   const Padding(
-                    padding: EdgeInsets.only(left: 40, right: 260, top: 10),
+                    padding: EdgeInsets.only(left: 40, right: 310, top: 10),
                     child: Text(
-                      "Date Of Birth:",
+                      "Birthday:",
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right:40),
                     child: TextFormField(
+                      validator:RequiredValidator(errorText: "Please enter your birthday example '08/04/2001' "),
                       decoration: const InputDecoration(
-                        hintText: "Date of Birth",
+                        hintText: "DD/MM/YYYY",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(50),
@@ -125,9 +129,10 @@ class _RegisterFormState extends State<RegisterForm> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
+                      validator:RequiredValidator(errorText: "Enter your mobile phone example '099999876'"),
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                        hintText: "Phone Number",
+                        hintText: "phone number 10 digits",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(50),
@@ -150,8 +155,9 @@ class _RegisterFormState extends State<RegisterForm> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
+                      validator:RequiredValidator(errorText: "Please enter your gender example 'male, female, other'"),
                       decoration: const InputDecoration(
-                        hintText: "Gender",
+                        hintText: "Male, Female, Other",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(50),
@@ -175,7 +181,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
                       keyboardType: TextInputType.emailAddress,
-
+                      validator:RequiredValidator(errorText: "Please enter your email example 'vitalsense@something.com'"),
                       decoration: const InputDecoration(
                         hintText: "Email",
                         border: OutlineInputBorder(
@@ -199,6 +205,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
+                      validator:RequiredValidator(errorText: "Please enter your password"),
                       obscureText: true,
                       decoration: const InputDecoration(
                         hintText: "Password",
@@ -220,12 +227,21 @@ class _RegisterFormState extends State<RegisterForm> {
                             Expanded(
                                 child: FloatingActionButton(
                                   onPressed: () {
-                                    registerKey.currentState?.save();
-                                    if (kDebugMode) {
-                                      print("firstname = ${profile.firstname} lastname = ${profile.lastname}  gender = ${profile.gender} dob = ${profile.dob} phone = ${profile.phone} email = ${profile.email} password =  ${profile.password}");
+                                    if(registerKey.currentState!.validate()) {
+                                      registerKey.currentState?.save();
+                                      if (kDebugMode) {
+                                        print("firstname = ${profile
+                                          .firstname} lastname = ${profile
+                                          .lastname}  gender = ${profile
+                                          .gender} dob = ${profile
+                                          .dob} phone = ${profile
+                                          .phone} email = ${profile
+                                          .email} password =  ${profile
+                                          .password}");
+                                      }
+                                      registerKey.currentState?.reset();
+                                      Navigator.pop(context);
                                     }
-                                    registerKey.currentState?.reset();
-                                    Navigator.pop(context);
                                   },
                                   backgroundColor: Colors.teal,
                                   child: const Icon(
