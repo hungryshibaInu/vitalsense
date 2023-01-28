@@ -27,7 +27,7 @@ class _RegisterFormState extends State<RegisterForm> {
       email: '',
       password: '');
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
-  CollectionReference _userCollection =
+  final CollectionReference _userCollection =
       FirebaseFirestore.instance.collection("users");
   @override
   Widget build(BuildContext context) {
@@ -289,9 +289,9 @@ class _RegisterFormState extends State<RegisterForm> {
                                     Expanded(
                                         child: FloatingActionButton(
                                       onPressed: () async {
-                                        if (formKey.currentState!.validate()) {
+                                        /*if (formKey.currentState!.validate()) {
                                           formKey.currentState?.save();
-                                          /*await _userCollection.add({
+                                          await _userCollection.add({
                                             "firstname": profile.firstname,
                                             "lastname": profile.lastname,
                                             "birthday": profile.dob,
@@ -299,7 +299,20 @@ class _RegisterFormState extends State<RegisterForm> {
                                             "phone": profile.phone,
                                             "email": profile.email,
                                             "password": profile.password,
-                                          });*/
+                                          });
+                                          formKey.currentState?.reset();
+                                        }*/
+                                        if (formKey.currentState!.validate()) {
+                                          formKey.currentState?.save();
+                                          await _userCollection.add({
+                                            "firstname": profile.firstname,
+                                            "lastname": profile.lastname,
+                                            "birthday": profile.dob,
+                                            "gender": profile.gender,
+                                            "phone": profile.phone,
+                                            "email": profile.email,
+                                            "password": profile.password,
+                                          });
                                           try {
                                             await FirebaseAuth.instance
                                                 .createUserWithEmailAndPassword(
