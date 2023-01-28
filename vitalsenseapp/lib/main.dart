@@ -1,10 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'firebase_options.dart';
-import 'login.dart';
-import 'home.dart';
-import 'test.dart';
-import 'register.dart';
+import 'model/firebase_options.dart';
+import 'pages/login.dart';
+import 'pages/home.dart';
+import 'pages/test.dart';
+import 'pages/register.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

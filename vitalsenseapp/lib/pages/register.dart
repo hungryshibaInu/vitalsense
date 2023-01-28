@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:vitalsenseapp/login.dart';
+import 'package:vitalsenseapp/pages/login.dart';
 import 'package:vitalsenseapp/model/profile.dart';
 
 class RegisterForm extends StatefulWidget {

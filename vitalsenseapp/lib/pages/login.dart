@@ -3,12 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:vitalsenseapp/register.dart';
-import 'package:vitalsenseapp/test.dart';
+import 'package:vitalsenseapp/pages/register.dart';
+import 'package:vitalsenseapp/pages/test.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/icon.dart';
 
-import 'model/profile.dart';
+import '../model/profile.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
