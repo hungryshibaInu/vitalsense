@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vitalsenseapp/homeCard.dart';
+import 'package:vitalsenseapp/pages/homeCard.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
