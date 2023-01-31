@@ -54,7 +54,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Image.asset("images/Vector.png"),
+                          Image.asset("assets/images/Vector.png"),
                           Row(
                             children: [
                               const Padding(
