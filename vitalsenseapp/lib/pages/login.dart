@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/icon.dart';
 
 import '../model/profile.dart';
+import 'home.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -55,7 +56,7 @@ class _LoginState extends State<Login> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset("images/Vector.png"),
+                        Image.asset("assets/images/Vector.png"),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -155,7 +156,7 @@ class _LoginState extends State<Login> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const HomePage()));
+                                                    HomePage()));
                                       });
                                     } on FirebaseAuthException catch (e) {
                                       Fluttertoast.showToast(
