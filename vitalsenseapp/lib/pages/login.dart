@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:vitalsenseapp/pages/home.dart';
 import 'package:vitalsenseapp/pages/register.dart';
 import 'package:vitalsenseapp/pages/test.dart';
 import 'package:flutter/cupertino.dart';
@@ -154,7 +155,7 @@ class _LoginState extends State<Login> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const MyWidget()));
+                                                    const HomePage()));
                                       });
                                     } on FirebaseAuthException catch (e) {
                                       Fluttertoast.showToast(
