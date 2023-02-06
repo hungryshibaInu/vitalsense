@@ -1,3 +1,5 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 
 class homeCard extends StatefulWidget {
@@ -8,6 +10,39 @@ class homeCard extends StatefulWidget {
 }
 
 class _homeCardState extends State<homeCard> {
+  final dbRef = FirebaseDatabase.instance.ref().child('Sensor');
+  final databaseReference = FirebaseDatabase.instance.ref();
+
+  String displayhr = 'deeja';
+  String displayspo2 = 'deeja';
+
+  @override
+  void initState() {
+    _activatelistenerhr();
+    _activatelistenerspo2();
+    super.initState();
+  }
+
+  void _activatelistenerspo2() {
+    databaseReference
+        .child('Sensor/hr/data')
+        .onValue
+        .listen((event) {
+      final spo2data = event.snapshot.value;
+      setState(() {
+        displayhr = '$spo2data';
+      });
+    });
+  }
+  void _activatelistenerhr() {
+    databaseReference.child('Sensor/spo2/data').onValue.listen((event) {
+      final hrData = event.snapshot.value;
+      setState(() {
+        displayspo2 = '$hrData';
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // return Container(
@@ -77,7 +112,7 @@ class _homeCardState extends State<homeCard> {
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    '70',
+                                    displayhr,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Color.fromRGBO(0, 0, 0, 1),
@@ -90,7 +125,7 @@ class _homeCardState extends State<homeCard> {
                                 ),
                               ),
                               Text(
-                                'Celsius',
+                                'BPM',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Color.fromRGBO(0, 0, 0, 1),
@@ -116,19 +151,9 @@ class _homeCardState extends State<homeCard> {
                                 width: 2,
                               ),
                               borderRadius:
-                                  BorderRadius.all(Radius.elliptical(29, 29)),
+                              BorderRadius.all(Radius.elliptical(29, 29)),
                             )))
                   ]))),
-          // Positioned(
-          //     top: 6,
-          //     left: 41,
-          //     child: Container(
-          //       width: 16,
-          //       height: 16,
-          //       decoration: BoxDecoration(
-          //         color: Color.fromRGBO(255, 255, 255, 1),
-          //       ),
-          //     )),
         ]));
   }
 }

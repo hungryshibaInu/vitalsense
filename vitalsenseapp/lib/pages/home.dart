@@ -1,5 +1,8 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:vitalsenseapp/pages/homeCard.dart';
+import 'package:vitalsenseapp/card/heartrate.dart';
+import 'package:vitalsenseapp/card/spo2.dart';
+import 'package:vitalsenseapp/card/bodytemp.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -9,6 +12,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final dbRef = FirebaseDatabase.instance.ref().child('Sensor');
+  final databaseReference = FirebaseDatabase.instance.ref();
+
+  String displayrr = 'deeja';
+
+  @override
+  void initState() {
+    _activatelistenertemp();
+    super.initState();
+  }
+
+  void _activatelistenertemp() {
+    databaseReference
+        .child('Sensor/rr/data')
+        .onValue
+        .listen((event) {
+      final rrtempdata = event.snapshot.value;
+      setState(() {
+        displayrr = '$rrtempdata';
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Image.asset('assets/images/lung.png'),
                               Text(
-                                '14',
+                                displayrr,
                                 style: TextStyle(
                                     color: Color.fromRGBO(0, 0, 0, 1),
                                     fontFamily: 'Inter',
@@ -89,7 +114,7 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [homeCard(), homeCard(), homeCard()],
+            children: const [bodytempCard(),spo2Card(),homeCard()],
           )
         ],
       ),
