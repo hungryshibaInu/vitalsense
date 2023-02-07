@@ -14,16 +14,14 @@ class _homeCardState extends State<homeCard> {
   final databaseReference = FirebaseDatabase.instance.ref();
 
   String displayhr = 'deeja';
-  String displayspo2 = 'deeja';
 
   @override
   void initState() {
     _activatelistenerhr();
-    _activatelistenerspo2();
     super.initState();
   }
 
-  void _activatelistenerspo2() {
+  void _activatelistenerhr() {
     databaseReference
         .child('Sensor/hr/data')
         .onValue
@@ -31,14 +29,6 @@ class _homeCardState extends State<homeCard> {
       final spo2data = event.snapshot.value;
       setState(() {
         displayhr = '$spo2data';
-      });
-    });
-  }
-  void _activatelistenerhr() {
-    databaseReference.child('Sensor/spo2/data').onValue.listen((event) {
-      final hrData = event.snapshot.value;
-      setState(() {
-        displayspo2 = '$hrData';
       });
     });
   }

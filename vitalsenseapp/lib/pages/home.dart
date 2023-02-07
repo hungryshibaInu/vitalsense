@@ -19,11 +19,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _activatelistenertemp();
+    _activatelistenerrr();
     super.initState();
   }
 
-  void _activatelistenertemp() {
+  void _activatelistenerrr() {
     databaseReference
         .child('Sensor/rr/data')
         .onValue
