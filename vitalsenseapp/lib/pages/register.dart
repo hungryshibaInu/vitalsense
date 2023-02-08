@@ -288,6 +288,8 @@ class _RegisterFormState extends State<RegisterForm> {
                               decoration: const InputDecoration(
                                 hintText: "Password",
                                 border: OutlineInputBorder(
+                                  //borderSide:
+                                  //BorderSide(width: 2, color: Colors.black),
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(50),
                                   ),
@@ -302,70 +304,94 @@ class _RegisterFormState extends State<RegisterForm> {
                               height: 120,
                               child: Column(children: <Widget>[
                                 Expanded(
-                                  child: FloatingActionButton(
-                                    onPressed: () async {
-                                      if (formKey.currentState!.validate()) {
-                                        formKey.currentState?.save();
-                                        await _userCollection.add({
-                                          "firstname": profile.firstname,
-                                          "lastname": profile.lastname,
-                                          "birthday": profile.dob,
-                                          "gender": profile.gender,
-                                          "phone": profile.phone,
-                                          "email": profile.email,
-                                          "password": profile.password,
-                                        });
-                                        try {
-                                          await FirebaseAuth.instance
-                                              .createUserWithEmailAndPassword(
-                                                  email: profile.email,
-                                                  password: profile.password)
-                                              .then((value) {
-                                            formKey.currentState?.reset();
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    "Account created successfully.",
-                                                gravity: ToastGravity.TOP);
-                                            Navigator.pop(context);
-                                          });
-                                        } on FirebaseAuthException catch (e) {
-                                          //print(e.code);
-                                          //print(e.message);
-                                          Fluttertoast.showToast(
-                                              msg: e.message!,
-                                              gravity: ToastGravity.CENTER);
-                                        }
-                                      }
-                                    },
-                                    backgroundColor: Colors.teal,
-                                    child: const Icon(
-                                      Icons.check_circle,
-                                      size: 25,
-                                      color: Colors.black,
+                                  child: Material(
+                                    type: MaterialType.transparency,
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.black, width: 2.0),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: InkWell(
+                                        borderRadius:
+                                            BorderRadius.circular(500.0),
+                                        child: FloatingActionButton(
+                                          onPressed: () async {
+                                            if (formKey.currentState!
+                                                .validate()) {
+                                              formKey.currentState?.save();
+                                              await _userCollection.add({
+                                                "firstname": profile.firstname,
+                                                "lastname": profile.lastname,
+                                                "birthday": profile.dob,
+                                                "gender": profile.gender,
+                                                "phone": profile.phone,
+                                                "email": profile.email,
+                                                "password": profile.password,
+                                              });
+                                              try {
+                                                await FirebaseAuth.instance
+                                                    .createUserWithEmailAndPassword(
+                                                        email: profile.email,
+                                                        password:
+                                                            profile.password)
+                                                    .then((value) {
+                                                  formKey.currentState?.reset();
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "Account created successfully.",
+                                                      gravity:
+                                                          ToastGravity.TOP);
+                                                  Navigator.pop(context);
+                                                });
+                                              } on FirebaseAuthException catch (e) {
+                                                //print(e.code);
+                                                //print(e.message);
+                                                Fluttertoast.showToast(
+                                                    msg: e.message!,
+                                                    gravity:
+                                                        ToastGravity.CENTER);
+                                              }
+                                            }
+                                          },
+                                          backgroundColor: Colors.amberAccent,
+                                          child: const Icon(
+                                            Icons.arrow_forward_rounded,
+                                            size: 35,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                                Row(children: <Widget>[
-                                  const Text(
-                                    'if already have account',
-                                    style: TextStyle(
-                                        color: Colors.black45, fontSize: 11),
-                                  ),
-                                  TextButton(
-                                    child: const Text(
-                                      'sign in',
-                                      style: TextStyle(
-                                          color: Colors.black45, fontSize: 12),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const Login()));
-                                    },
-                                  )
-                                ])
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      const Text(
+                                        'if already have account',
+                                        style: TextStyle(
+                                            color: Colors.black45,
+                                            fontSize: 11),
+                                      ),
+                                      TextButton(
+                                        child: const Text(
+                                          'sign in',
+                                          style: TextStyle(
+                                              color: Colors.black45,
+                                              fontSize: 12),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const Login()));
+                                        },
+                                      )
+                                    ])
                               ]))
                         ],
                       ),

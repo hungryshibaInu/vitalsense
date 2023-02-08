@@ -88,6 +88,7 @@ class _LoginState extends State<Login> {
                                 decoration: const InputDecoration(
                                   hintText: "Email",
                                   border: OutlineInputBorder(
+                                    borderSide: BorderSide(width: 3, color: Colors.black),
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(50),
                                     ),
@@ -135,36 +136,49 @@ class _LoginState extends State<Login> {
                               height: 90,
                               padding:
                                   const EdgeInsets.fromLTRB(10, 30, 10, 10),
-                              child: FloatingActionButton(
-                                backgroundColor: Colors.amberAccent,
-                                child: const Icon(
-                                  Icons.play_arrow_outlined,
-                                  size: 35,
-                                  color: Colors.black,
+                              child: Material(
+                                type: MaterialType.transparency,
+                                child: Ink(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.black, width: 2.0),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(500.0),
+                                    child: FloatingActionButton(
+                                      backgroundColor: Colors.amberAccent,
+                                      child: const Icon(
+                                        Icons.arrow_forward_rounded,
+                                        size: 35,
+                                        color: Colors.black,
+                                      ),
+                                      onPressed: () async {
+                                        if (formKey.currentState!.validate()) {
+                                          formKey.currentState?.save();
+                                          try {
+                                            await FirebaseAuth.instance
+                                                .signInWithEmailAndPassword(
+                                                    email: profile.email,
+                                                    password: profile.password)
+                                                .then((value) {
+                                              formKey.currentState?.reset();
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          HomePage()));
+                                            });
+                                          } on FirebaseAuthException catch (e) {
+                                            Fluttertoast.showToast(
+                                                msg: e.message!,
+                                                gravity: ToastGravity.CENTER);
+                                          }
+                                        }
+                                      },
+                                    ),
+                                  ),
                                 ),
-                                onPressed: () async {
-                                  if (formKey.currentState!.validate()) {
-                                    formKey.currentState?.save();
-                                    try {
-                                      await FirebaseAuth.instance
-                                          .signInWithEmailAndPassword(
-                                              email: profile.email,
-                                              password: profile.password)
-                                          .then((value) {
-                                        formKey.currentState?.reset();
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HomePage()));
-                                      });
-                                    } on FirebaseAuthException catch (e) {
-                                      Fluttertoast.showToast(
-                                          msg: e.message!,
-                                          gravity: ToastGravity.CENTER);
-                                    }
-                                  }
-                                },
                               ),
                             ),
                             Row(
@@ -183,7 +197,7 @@ class _LoginState extends State<Login> {
                                             builder: (context) =>
                                                 const RegisterForm()));
                                   },
-                                )
+                                ),
                               ],
                               mainAxisAlignment: MainAxisAlignment.center,
                             ),
