@@ -2,6 +2,24 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 
+var colorlist = [
+  Color.fromRGBO(152, 201, 122, 1),
+  Color.fromRGBO(252, 200, 66, 1),
+  Color.fromRGBO(241, 66, 57, 1)
+];
+
+Color changeColor(int value) {
+  int color = 0;
+  if (value >= 96) {
+    color = 0;
+  } else if (value >= 92 && value <= 95) {
+    color = 1;
+  } else if (value <= 91) {
+    color = 2;
+  }
+  return colorlist[color];
+}
+
 class spo2Card extends StatefulWidget {
   const spo2Card({super.key});
 
@@ -13,7 +31,7 @@ class _spo2CardState extends State<spo2Card> {
   final dbRef = FirebaseDatabase.instance.ref().child('Sensor');
   final databaseReference = FirebaseDatabase.instance.ref();
 
-  String displayspo2 = 'deeja';
+  String displayspo2 = '0';
 
   @override
   void initState() {
@@ -32,21 +50,6 @@ class _spo2CardState extends State<spo2Card> {
 
   @override
   Widget build(BuildContext context) {
-    // return Container(
-    //   margin: EdgeInsets.all(15.0),
-    //   color: Colors.green,
-    //   width: 93,
-    //   height: 156,
-    //   child: Stack(
-    //     children: [
-    //       Positioned(
-    //         top: 14,
-    //         left: 0,
-    //         child: Container(),
-    //       )
-    //     ],
-    //   ),
-    // );
     return Container(
         margin: EdgeInsets.all(10.0),
         width: 93,
@@ -73,7 +76,13 @@ class _spo2CardState extends State<spo2Card> {
                                   offset: Offset(0, 4),
                                   blurRadius: 4)
                             ],
-                            color: Color.fromRGBO(252, 200, 66, 1),
+                            // color: Color.fromRGBO(252, 200, 66, 1),
+                            color: changeColor(int.parse(displayspo2)),
+                            // if (int.parse(displayspo2)>95) ...[
+                            //   color: colorlist[0]
+                            // ] else ... [
+
+                            // ]
                             border: Border.all(
                               color: Color.fromRGBO(0, 0, 0, 1),
                               width: 2,
@@ -138,7 +147,7 @@ class _spo2CardState extends State<spo2Card> {
                                 width: 2,
                               ),
                               borderRadius:
-                              BorderRadius.all(Radius.elliptical(29, 29)),
+                                  BorderRadius.all(Radius.elliptical(29, 29)),
                             )))
                   ]))),
         ]));

@@ -4,6 +4,24 @@ import 'package:vitalsenseapp/card/heartrate.dart';
 import 'package:vitalsenseapp/card/spo2.dart';
 import 'package:vitalsenseapp/card/bodytemp.dart';
 
+var colorlist = [
+  Color.fromRGBO(152, 201, 122, 1),
+  Color.fromRGBO(252, 200, 66, 1),
+  Color.fromRGBO(241, 66, 57, 1),
+];
+
+Color changeColor(int value) {
+  int color = 0;
+  if (value >= 12 && value <= 20) {
+    color = 0;
+  } else if ((value >= 9 && value <= 11) || (value >= 21 && value <= 24)) {
+    color = 1;
+  } else if (value <= 8 || value >= 25) {
+    color = 2;
+  }
+  return colorlist[color];
+}
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -15,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   final dbRef = FirebaseDatabase.instance.ref().child('Sensor');
   final databaseReference = FirebaseDatabase.instance.ref();
 
-  String displayrr = 'deeja';
+  String displayrr = '0';
 
   @override
   void initState() {
@@ -24,16 +42,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _activatelistenerrr() {
-    databaseReference
-        .child('Sensor/rr/data')
-        .onValue
-        .listen((event) {
+    databaseReference.child('Sensor/rr/data').onValue.listen((event) {
       final rrtempdata = event.snapshot.value;
       setState(() {
         displayrr = '$rrtempdata';
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +75,8 @@ class _HomePageState extends State<HomePage> {
                                 offset: Offset(0, 4),
                                 blurRadius: 4)
                           ],
-                          color: Color.fromRGBO(136, 194, 80, 1),
+                          // color: Color.fromRGBO(136, 194, 80, 1),
+                          color: changeColor(int.parse(displayrr)),
                           border: Border.all(
                             color: Color.fromRGBO(0, 0, 0, 1),
                             width: 3,
@@ -114,7 +131,7 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [bodytempCard(),spo2Card(),homeCard()],
+            children: const [bodytempCard(), spo2Card(), homeCard()],
           )
         ],
       ),
