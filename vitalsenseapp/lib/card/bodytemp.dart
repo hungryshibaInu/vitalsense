@@ -148,6 +148,7 @@ class bodytempCardState extends State<bodytempCard> {
                         top: 0,
                         left: 34,
                         child: Container(
+                            child: Image.asset('assets/images/tempicon.png'),
                             width: 29,
                             height: 29,
                             decoration: BoxDecoration(

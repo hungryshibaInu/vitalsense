@@ -50,21 +50,6 @@ class _homeCardState extends State<homeCard> {
 
   @override
   Widget build(BuildContext context) {
-    // return Container(
-    //   margin: EdgeInsets.all(15.0),
-    //   color: Colors.green,
-    //   width: 93,
-    //   height: 156,
-    //   child: Stack(
-    //     children: [
-    //       Positioned(
-    //         top: 14,
-    //         left: 0,
-    //         child: Container(),
-    //       )
-    //     ],
-    //   ),
-    // );
     return Container(
         margin: EdgeInsets.all(10.0),
         width: 93,
@@ -148,6 +133,7 @@ class _homeCardState extends State<homeCard> {
                         top: 0,
                         left: 34,
                         child: Container(
+                            child: Image.asset('assets/images/hricon.png'),
                             width: 29,
                             height: 29,
                             decoration: BoxDecoration(

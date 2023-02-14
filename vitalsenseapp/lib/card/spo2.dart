@@ -138,6 +138,7 @@ class _spo2CardState extends State<spo2Card> {
                         top: 0,
                         left: 34,
                         child: Container(
+                            child: Image.asset('assets/images/o2icon.png'),
                             width: 29,
                             height: 29,
                             decoration: BoxDecoration(
