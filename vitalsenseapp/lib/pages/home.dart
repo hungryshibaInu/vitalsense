@@ -57,6 +57,9 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Row(
+              // mainAxisAlignment: ,
+              children: [Text("data")]),
           Container(
               margin: EdgeInsets.only(bottom: 35.0),
               width: 214,
@@ -134,6 +137,12 @@ class _HomePageState extends State<HomePage> {
             children: const [bodytempCard(), spo2Card(), homeCard()],
           )
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [DrawerHeader(child: Text("data"))],
+        ),
       ),
     );
   }

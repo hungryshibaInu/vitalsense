@@ -1,11 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:vitalsenseapp/card/heartrate.dart';
+import 'package:vitalsenseapp/pages/history.dart';
 import 'model/firebase_options.dart';
 import 'pages/login.dart';
 import 'pages/home.dart';
 import 'pages/test.dart';
 import 'pages/register.dart';
+import 'pages/history.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'VitalSense',
       theme: ThemeData(
         appBarTheme: AppBarTheme().copyWith(
           backgroundColor: Color(0xFFFFF9F3),
@@ -31,7 +33,8 @@ class MyApp extends StatelessWidget {
       ),
       // home: const Login(),
       // home: Login(),
-      home: HomePage(),
+      // home: HomePage(),
+      home: HistoryPage(),
     );
   }
 }
