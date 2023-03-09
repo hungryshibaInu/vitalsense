@@ -3,24 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:vitalsenseapp/card/heartrate.dart';
 import 'package:vitalsenseapp/card/spo2.dart';
 import 'package:vitalsenseapp/card/bodytemp.dart';
+import 'package:vitalsenseapp/function/changecolorfunc.dart';
 
-var colorlist = [
-  Color.fromRGBO(152, 201, 122, 1),
-  Color.fromRGBO(252, 200, 66, 1),
-  Color.fromRGBO(241, 66, 57, 1),
-];
+// var colorlist = [
+//   Color.fromRGBO(152, 201, 122, 1),
+//   Color.fromRGBO(252, 200, 66, 1),
+//   Color.fromRGBO(241, 66, 57, 1),
+// ];
 
-Color changeColor(int value) {
-  int color = 0;
-  if (value >= 12 && value <= 20) {
-    color = 0;
-  } else if ((value >= 9 && value <= 11) || (value >= 21 && value <= 24)) {
-    color = 1;
-  } else if (value <= 8 || value >= 25) {
-    color = 2;
-  }
-  return colorlist[color];
-}
+// Color changeColor(int value) {
+//   int color = 0;
+//   if (value >= 12 && value <= 20) {
+//     color = 0;
+//   } else if ((value >= 9 && value <= 11) || (value >= 21 && value <= 24)) {
+//     color = 1;
+//   } else if (value <= 8 || value >= 25) {
+//     color = 2;
+//   }
+//   return colorlist[color];
+// }
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -61,7 +62,7 @@ class _HomePageState extends State<HomePage> {
               // mainAxisAlignment: ,
               children: [Text("data")]),
           Container(
-              margin: EdgeInsets.only(bottom: 35.0),
+              margin: const EdgeInsets.only(bottom: 35.0),
               width: 214,
               height: 214,
               child: Stack(children: <Widget>[
@@ -72,20 +73,21 @@ class _HomePageState extends State<HomePage> {
                         width: 214,
                         height: 214,
                         decoration: BoxDecoration(
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                                 color: Color.fromRGBO(0, 0, 0, 0.25),
                                 offset: Offset(0, 4),
                                 blurRadius: 4)
                           ],
                           // color: Color.fromRGBO(136, 194, 80, 1),
-                          color: changeColor(int.parse(displayrr)),
+                          color: changeColor(
+                              'Respiratory Rate', int.parse(displayrr)),
                           border: Border.all(
                             color: Color.fromRGBO(0, 0, 0, 1),
                             width: 3,
                           ),
-                          borderRadius:
-                              BorderRadius.all(Radius.elliptical(214, 214)),
+                          borderRadius: const BorderRadius.all(
+                              Radius.elliptical(214, 214)),
                         ))),
                 Positioned(
                     top: 25,
@@ -94,13 +96,13 @@ class _HomePageState extends State<HomePage> {
                         width: 163,
                         height: 163,
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(255, 249, 243, 1),
+                          color: const Color.fromRGBO(255, 249, 243, 1),
                           border: Border.all(
-                            color: Color.fromRGBO(0, 0, 0, 1),
+                            color: const Color.fromRGBO(0, 0, 0, 1),
                             width: 3,
                           ),
-                          borderRadius:
-                              BorderRadius.all(Radius.elliptical(163, 163)),
+                          borderRadius: const BorderRadius.all(
+                              Radius.elliptical(163, 163)),
                         ),
                         child: Align(
                           alignment: Alignment.center,
@@ -111,14 +113,14 @@ class _HomePageState extends State<HomePage> {
                               Image.asset('assets/images/lung.png'),
                               Text(
                                 displayrr,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Color.fromRGBO(0, 0, 0, 1),
                                     fontFamily: 'Inter',
                                     fontSize: 70,
                                     letterSpacing: 0,
                                     fontWeight: FontWeight.bold),
                               ),
-                              Text(
+                              const Text(
                                 'BPM',
                                 style: TextStyle(
                                     color: Color.fromRGBO(0, 0, 0, 1),

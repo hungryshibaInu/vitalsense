@@ -1,24 +1,25 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/rendering.dart';
+// import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
+import 'package:vitalsenseapp/function/changecolorfunc.dart';
 
-var colorlist = [
-  Color.fromRGBO(152, 201, 122, 1),
-  Color.fromRGBO(252, 200, 66, 1),
-  Color.fromRGBO(241, 66, 57, 1)
-];
+// var colorlist = [
+//   Color.fromRGBO(152, 201, 122, 1),
+//   Color.fromRGBO(252, 200, 66, 1),
+//   Color.fromRGBO(241, 66, 57, 1)
+// ];
 
-Color changeColor(int value) {
-  int color = 0;
-  if (value >= 96) {
-    color = 0;
-  } else if (value >= 92 && value <= 95) {
-    color = 1;
-  } else if (value <= 91) {
-    color = 2;
-  }
-  return colorlist[color];
-}
+// Color changeColor(int value) {
+//   int color = 0;
+//   if (value >= 96) {
+//     color = 0;
+//   } else if (value >= 92 && value <= 95) {
+//     color = 1;
+//   } else if (value <= 91) {
+//     color = 2;
+//   }
+//   return colorlist[color];
+// }
 
 class spo2Card extends StatefulWidget {
   const spo2Card({super.key});
@@ -51,7 +52,7 @@ class _spo2CardState extends State<spo2Card> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.all(10.0),
+        margin: const EdgeInsets.all(10.0),
         width: 93,
         height: 156,
         child: Stack(children: <Widget>[
@@ -69,22 +70,23 @@ class _spo2CardState extends State<spo2Card> {
                           width: 93,
                           height: 142,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            boxShadow: [
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20)),
+                            boxShadow: const [
                               BoxShadow(
                                   color: Color.fromRGBO(0, 0, 0, 0.25),
                                   offset: Offset(0, 4),
                                   blurRadius: 4)
                             ],
                             // color: Color.fromRGBO(252, 200, 66, 1),
-                            color: changeColor(int.parse(displayspo2)),
+                            color: changeColor('SpO2', int.parse(displayspo2)),
                             // if (int.parse(displayspo2)>95) ...[
                             //   color: colorlist[0]
                             // ] else ... [
 
                             // ]
                             border: Border.all(
-                              color: Color.fromRGBO(0, 0, 0, 1),
+                              color: const Color.fromRGBO(0, 0, 0, 1),
                               width: 2,
                             ),
                           ),
@@ -93,16 +95,16 @@ class _spo2CardState extends State<spo2Card> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(bottom: 10),
+                                margin: const EdgeInsets.only(bottom: 10),
                                 width: 60,
                                 height: 60,
                                 decoration: BoxDecoration(
-                                  color: Color.fromRGBO(254, 248, 242, 1),
+                                  color: const Color.fromRGBO(254, 248, 242, 1),
                                   border: Border.all(
-                                    color: Color.fromRGBO(0, 0, 0, 1),
+                                    color: const Color.fromRGBO(0, 0, 0, 1),
                                     width: 2,
                                   ),
-                                  borderRadius: BorderRadius.all(
+                                  borderRadius: const BorderRadius.all(
                                       Radius.elliptical(60, 60)),
                                 ),
                                 child: Align(
@@ -110,7 +112,7 @@ class _spo2CardState extends State<spo2Card> {
                                   child: Text(
                                     displayspo2,
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Color.fromRGBO(0, 0, 0, 1),
                                       fontFamily: 'Inter',
                                       fontSize: 30,
@@ -120,7 +122,7 @@ class _spo2CardState extends State<spo2Card> {
                                   ),
                                 ),
                               ),
-                              Text(
+                              const Text(
                                 '%',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -138,18 +140,18 @@ class _spo2CardState extends State<spo2Card> {
                         top: 0,
                         left: 34,
                         child: Container(
-                            child: Image.asset('assets/images/o2icon.png'),
                             width: 29,
                             height: 29,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(255, 249, 243, 1),
+                              color: const Color.fromRGBO(255, 249, 243, 1),
                               border: Border.all(
-                                color: Color.fromRGBO(0, 0, 0, 1),
+                                color: const Color.fromRGBO(0, 0, 0, 1),
                                 width: 2,
                               ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.elliptical(29, 29)),
-                            )))
+                              borderRadius: const BorderRadius.all(
+                                  Radius.elliptical(29, 29)),
+                            ),
+                            child: Image.asset('assets/images/o2icon.png')))
                   ]))),
         ]));
   }

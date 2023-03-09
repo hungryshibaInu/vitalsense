@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:vitalsenseapp/function/changecolorfunc.dart';
+
+// var colorlist = [
+//   const Color.fromRGBO(152, 201, 122, 1),
+//   const Color.fromRGBO(252, 200, 66, 1),
+//   const Color.fromRGBO(241, 66, 57, 1),
+// ];
 
 class HistoryCard extends StatelessWidget {
   final String date;
   final String warncount;
   final String critcount;
+  final String hrvalue;
+  final String spo2value;
+  final String rrvalue;
+  final String skintempvalue;
+
   const HistoryCard(
       {super.key,
       this.date = 'dd/mm/yyyy',
       this.warncount = '0',
-      this.critcount = '0'});
+      this.critcount = '0',
+      this.hrvalue = '0',
+      this.rrvalue = '0',
+      this.skintempvalue = '0',
+      this.spo2value = '0'});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 20),
       width: 313,
       height: 164,
       decoration: BoxDecoration(
@@ -36,7 +53,7 @@ class HistoryCard extends StatelessWidget {
             children: [
               Container(
                 margin: const EdgeInsets.only(left: 28, top: 15),
-                child: Text("$warncount warning(s), $critcount critical(s) ",
+                child: Text('$warncount warning(s), $critcount critical(s) ',
                     style: const TextStyle(fontFamily: 'Inter', fontSize: 12)),
               ),
               Container(
@@ -61,14 +78,14 @@ class HistoryCard extends StatelessWidget {
                     VitalSign(
                       name: 'Heart Rate',
                       imgurl: 'assets/images/hricon.png',
-                      value: '100',
+                      value: hrvalue,
                       unit: 'BPM',
                       edge: const EdgeInsets.only(left: 29, top: 10),
                     ),
                     VitalSign(
                       name: 'SpO2',
                       imgurl: 'assets/images/o2icon.png',
-                      value: '98',
+                      value: spo2value,
                       unit: '%',
                       edge: const EdgeInsets.only(left: 29, top: 5),
                     ),
@@ -86,15 +103,15 @@ class HistoryCard extends StatelessWidget {
                     VitalSign(
                       name: 'Respiratory Rate',
                       imgurl: 'assets/images/lung-s.png',
-                      value: '16',
+                      value: rrvalue,
                       unit: 'breaths/min',
                       fontsize: 12,
                       edge: const EdgeInsets.only(right: 29, top: 11),
                     ),
                     VitalSign(
-                      name: 'Skin Temerature',
+                      name: 'Skin Temperature',
                       imgurl: 'assets/images/tempicon.png',
-                      value: '36',
+                      value: skintempvalue,
                       unit: '°C',
                       edge: const EdgeInsets.only(right: 29, top: 5),
                     ),
@@ -124,8 +141,8 @@ class VitalSign extends StatelessWidget {
       required this.imgurl,
       required this.edge,
       required this.unit,
+      required this.value,
       this.color = const Color.fromRGBO(136, 194, 80, 1),
-      this.value = '0',
       this.fontsize = 15});
 
   @override
@@ -175,7 +192,8 @@ class VitalSign extends StatelessWidget {
                         fontFamily: 'Inter',
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
-                        color: color,
+                        color: changeColor(name, int.parse(value)),
+                        // color: color
                       ),
                     ),
                   )
