@@ -12,8 +12,74 @@ class _HistoryPage extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        // title: Text('text'),
+        elevation: 0,
+        foregroundColor: Colors.black,
+        // backgroundColor: Colors.transparent,
+        leading: Builder(builder: (BuildContext context) {
+          return Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: IconButton(
+              icon: const Icon(
+                Icons.menu,
+                size: 40,
+              ),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            ),
+          );
+        }),
+      ),
+      drawer: Drawer(
+        width: 200,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20, left: 10),
+          child: ListView(
+            physics: const NeverScrollableScrollPhysics(),
+            children: const [
+              ListTile(
+                leading: Icon(
+                  Icons.home,
+                  color: Colors.amber,
+                ),
+                title: Text(
+                  'Home',
+                  style: TextStyle(
+                      fontFamily: 'Inter', fontWeight: FontWeight.bold),
+                ),
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.history,
+                  color: Colors.amber,
+                ),
+                title: Text(
+                  'History',
+                  style: TextStyle(
+                      fontFamily: 'Inter', fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
+          ),
+        ),
+        // child: ListView(
+        //   children: [
+        //     DrawerHeader(
+        //         child: Container(
+        //       color: Colors.black,
+        //       alignment: Alignment.center,
+        //       child: Text(
+        //         'aifaf',
+        //         style: TextStyle(color: Colors.white),
+        //       ),
+        //     ))
+        //   ],
+        // ),
+      ),
       body: Container(
-        margin: const EdgeInsets.only(top: 38),
+        margin: const EdgeInsets.only(top: 80),
         height: double.infinity,
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -27,14 +93,21 @@ class _HistoryPage extends State<HistoryPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                height: 150,
+                height: 200,
                 width: double.infinity,
                 color: Colors.cyan,
                 child: const Text('Graph'),
               ),
               Container(
-                margin: EdgeInsets.all(20),
-                child: Text('History'),
+                margin: EdgeInsets.only(top: 20, bottom: 20),
+                alignment: Alignment.centerLeft,
+                child: const Text(
+                  'History',
+                  style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
               // Container(
               //   // margin: EdgeInsets.only(top: 20),
@@ -44,16 +117,20 @@ class _HistoryPage extends State<HistoryPage> {
               //   ),
               // )
               SizedBox(
-                  height: 547,
+                  height: 445,
                   child: ListView.builder(
-                      itemBuilder: ((context, index) => HistoryCard(
-                            warncount: '${index + 1}',
-                            critcount: '$index',
-                            hrvalue: '101',
-                            spo2value: '98',
-                            rrvalue: '16',
-                            skintempvalue: '36',
-                          )))),
+                    itemBuilder: ((context, index) => HistoryCard(
+                          warncount: '${index + 1}',
+                          critcount: '$index',
+                          hrvalue: '101',
+                          spo2value: '20',
+                          rrvalue: '16',
+                          skintempvalue: '36',
+                        )),
+                    scrollDirection: Axis.vertical,
+                    padding: const EdgeInsets.only(bottom: 20),
+                    // addAutomaticKeepAlives: true,
+                  )),
             ],
           ),
         ),

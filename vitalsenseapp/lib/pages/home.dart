@@ -140,12 +140,12 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [DrawerHeader(child: Text("data"))],
-        ),
-      ),
+      // drawer: Drawer(
+      //   child: ListView(
+      //     padding: EdgeInsets.zero,
+      //     children: [DrawerHeader(child: Text("data"))],
+      //   ),
+      // ),
     );
   }
 }

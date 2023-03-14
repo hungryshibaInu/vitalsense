@@ -1,11 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:vitalsenseapp/card/heartrate.dart';
-import 'package:vitalsenseapp/pages/history.dart';
+// import 'package:vitalsenseapp/card/heartrate.dart';
+// import 'package:vitalsenseapp/pages/history.dart';
 import 'model/firebase_options.dart';
 import 'pages/login.dart';
 import 'pages/home.dart';
-import 'pages/test.dart';
+// import 'pages/test.dart';
 import 'pages/register.dart';
 import 'pages/history.dart';
 
@@ -32,7 +32,6 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Color(0xFFFFF9F3),
       ),
       // home: const Login(),
-      // home: Login(),
       // home: const HomePage(),
       home: const HistoryPage(),
     );
