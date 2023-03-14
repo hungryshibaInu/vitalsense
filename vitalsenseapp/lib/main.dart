@@ -31,6 +31,10 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Color(0xFFFFF9F3),
       ),
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/history': (context) => const HistoryPage(),
+      },
       // home: const Login(),
       // home: const HomePage(),
       home: const HistoryPage(),
