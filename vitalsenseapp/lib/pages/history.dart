@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vitalsenseapp/card/historycard.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
-import 'package:vitalsenseapp/pages/home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:vitalsenseapp/pages/home.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -11,12 +12,30 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPage extends State<HistoryPage> {
+  int _count = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCount();
+  }
+
+  Future<void> _getCount() async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('eachDay').get();
+
+    setState(() {
+      _count = querySnapshot.size;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SliderDrawer(
         // sliderOpenSize: 2000,
         appBar: const SliderAppBar(
+            drawerIconSize: 35,
             appBarHeight: 100,
             appBarPadding: EdgeInsets.only(top: 50),
             appBarColor: Colors.white,
@@ -31,7 +50,7 @@ class _HistoryPage extends State<HistoryPage> {
               children: [
                 ListTile(
                     leading: const Icon(
-                      Icons.home,
+                      Icons.home_filled,
                       color: Colors.amber,
                       size: 30,
                     ),
@@ -46,7 +65,7 @@ class _HistoryPage extends State<HistoryPage> {
                         Navigator.pushReplacementNamed(context, '/home')),
                 ListTile(
                   leading: const Icon(
-                    Icons.history,
+                    Icons.history_rounded,
                     color: Colors.amber,
                     size: 30,
                   ),
@@ -85,7 +104,7 @@ class _HistoryPage extends State<HistoryPage> {
                   child: const Text('Graph'),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 20, bottom: 20),
+                  margin: const EdgeInsets.only(top: 20, bottom: 20),
                   alignment: Alignment.centerLeft,
                   child: const Text(
                     'History',
@@ -104,19 +123,57 @@ class _HistoryPage extends State<HistoryPage> {
                 // )
                 SizedBox(
                     height: 425,
-                    child: ListView.builder(
-                      itemBuilder: ((context, index) => HistoryCard(
-                            warncount: '${index + 1}',
-                            critcount: '$index',
-                            hrvalue: '101',
-                            spo2value: '20',
-                            rrvalue: '16',
-                            skintempvalue: '36',
-                          )),
-                      scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.only(bottom: 20),
-                      // addAutomaticKeepAlives: true,
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('eachDay')
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Text('Loading...');
+                        }
+                        _count = snapshot.data!.docs.length;
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _count,
+                          itemBuilder: ((context, index) => HistoryCard(
+                                warncount: '${index + 1}',
+                                critcount: '$index',
+                                hrvalue: (snapshot.data!.docs[index]['hr'])
+                                    .toString(),
+                                spo2value: (snapshot.data!.docs[index]['spo2'])
+                                    .toString(),
+                                rrvalue: '16', //need to convert to int in Node.js first
+                                skintempvalue: (snapshot.data!.docs[index]
+                                        ['bodytemp'])
+                                    .toString(),
+                              )),
+                          scrollDirection: Axis.vertical,
+                          padding: const EdgeInsets.only(bottom: 20),
+                          // addAutomaticKeepAlives: true,
+                        );
+                      },
                     )),
+                // SizedBox(
+                //     height: 425,
+                //     child: ListView.builder(
+                //       shrinkWrap: true,
+                //       itemBuilder: ((context, index) => HistoryCard(
+                //             warncount: '${index + 1}',
+                //             critcount: '$index',
+                //             hrvalue: '101',
+                //             spo2value: '20',
+                //             rrvalue: '16',
+                //             skintempvalue: '36',
+                //           )),
+                //       scrollDirection: Axis.vertical,
+                //       padding: const EdgeInsets.only(bottom: 20),
+                //       // addAutomaticKeepAlives: true,
+                //     )),
               ],
             ),
           ),

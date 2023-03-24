@@ -88,7 +88,8 @@ class _LoginState extends State<Login> {
                                 decoration: const InputDecoration(
                                   hintText: "Email",
                                   border: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 3, color: Colors.black),
+                                    borderSide: BorderSide(
+                                        width: 3, color: Colors.black),
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(50),
                                     ),
@@ -182,6 +183,7 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 const Text('Does not have account?'),
                                 TextButton(
@@ -199,7 +201,6 @@ class _LoginState extends State<Login> {
                                   },
                                 ),
                               ],
-                              mainAxisAlignment: MainAxisAlignment.center,
                             ),
                           ],
                         ),
@@ -208,7 +209,7 @@ class _LoginState extends State<Login> {
               ),
             ));
           }
-          return Scaffold(
+          return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),

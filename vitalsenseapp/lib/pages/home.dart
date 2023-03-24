@@ -58,6 +58,7 @@ class _HomePageState extends State<HomePage> {
       body: SliderDrawer(
         // sliderOpenSize: 2000,
         appBar: const SliderAppBar(
+            drawerIconSize: 35,
             appBarHeight: 100,
             appBarPadding: EdgeInsets.only(top: 50),
             appBarColor: Colors.white,
@@ -72,7 +73,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 ListTile(
                     leading: const Icon(
-                      Icons.home,
+                      Icons.home_filled,
                       color: Colors.amber,
                       size: 30,
                     ),
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                         Navigator.pushReplacementNamed(context, '/home')),
                 ListTile(
                   leading: const Icon(
-                    Icons.history,
+                    Icons.history_rounded,
                     color: Colors.amber,
                     size: 30,
                   ),
@@ -162,30 +163,33 @@ class _HomePageState extends State<HomePage> {
                             ),
                             child: Align(
                               alignment: Alignment.center,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset('assets/images/lung.png'),
-                                  Text(
-                                    displayrr,
-                                    style: const TextStyle(
-                                        color: Color.fromRGBO(0, 0, 0, 1),
-                                        fontFamily: 'Inter',
-                                        fontSize: 70,
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const Text(
-                                    'BPM',
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(0, 0, 0, 1),
-                                        fontFamily: 'Inter',
-                                        fontSize: 20,
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.normal),
-                                  )
-                                ],
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset('assets/images/lung.png'),
+                                    Text(
+                                      displayrr,
+                                      style: const TextStyle(
+                                          color: Color.fromRGBO(0, 0, 0, 1),
+                                          fontFamily: 'Inter',
+                                          fontSize: 60,
+                                          letterSpacing: 0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Text(
+                                      'breaths/min',
+                                      style: TextStyle(
+                                          color: Color.fromRGBO(0, 0, 0, 1),
+                                          fontFamily: 'Inter',
+                                          fontSize: 15,
+                                          letterSpacing: 0,
+                                          fontWeight: FontWeight.normal),
+                                    )
+                                  ],
+                                ),
                               ),
                             ))),
                   ])),
@@ -193,6 +197,15 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [bodytempCard(), spo2Card(), homeCard()],
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 80),
+                child: Text(' last update: 00.00 00/00/00',
+                    style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 15,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey)),
               )
             ],
           ),
