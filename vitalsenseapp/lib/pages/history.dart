@@ -13,6 +13,7 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPage extends State<HistoryPage> {
   int _count = 0;
+  String range = 'eachDay';
 
   @override
   void initState() {
@@ -106,26 +107,44 @@ class _HistoryPage extends State<HistoryPage> {
                 Container(
                   margin: const EdgeInsets.only(top: 20, bottom: 20),
                   alignment: Alignment.centerLeft,
-                  child: const Text(
-                    'History',
-                    style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'History',
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      DropdownButton(
+                          elevation: 2,
+                          style: const TextStyle(
+                              fontFamily: 'Inter', color: Colors.black),
+                          value: range,
+                          items: const [
+                            DropdownMenuItem(
+                              value: 'eachDay',
+                              child: Text('Day'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'week',
+                              child: Text('Week'),
+                            )
+                          ],
+                          onChanged: (String? value) {
+                            setState(() {
+                              range = value!;
+                            });
+                          })
+                    ],
                   ),
                 ),
-                // Container(
-                //   // margin: EdgeInsets.only(top: 20),
-                //   height: 500,
-                //   child: ListView(
-                //     children: items,
-                //   ),
-                // )
                 SizedBox(
                     height: 425,
                     child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
-                          .collection('eachDay')
+                          .collection(range)
                           .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -138,16 +157,19 @@ class _HistoryPage extends State<HistoryPage> {
                         }
                         _count = snapshot.data!.docs.length;
                         return ListView.builder(
-                          shrinkWrap: true,
+                          // shrinkWrap: true,
                           itemCount: _count,
                           itemBuilder: ((context, index) => HistoryCard(
+                                // date: (snapshot.data!.docs[index]['date'])
+                                //     .toString(), //need to add week date
                                 warncount: '${index + 1}',
                                 critcount: '$index',
                                 hrvalue: (snapshot.data!.docs[index]['hr'])
                                     .toString(),
                                 spo2value: (snapshot.data!.docs[index]['spo2'])
                                     .toString(),
-                                rrvalue: '16', //need to convert to int in Node.js first
+                                rrvalue:
+                                    '16', //need to convert to int in Node.js first
                                 skintempvalue: (snapshot.data!.docs[index]
                                         ['bodytemp'])
                                     .toString(),
