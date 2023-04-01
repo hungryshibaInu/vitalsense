@@ -48,25 +48,22 @@ class HistoryCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(left: 28, top: 15),
-                child: Text('$warncount warning(s), $critcount critical(s) ',
+          Container(
+            margin: const EdgeInsets.only(left: 28, right: 28, top: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('$warncount warning(s), $critcount critical(s) ',
                     style: const TextStyle(fontFamily: 'Inter', fontSize: 12)),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 28, top: 15),
-                child: Text(
+                Text(
                   date,
                   style: const TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 12,
                       color: Color.fromRGBO(129, 127, 127, 1)),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
           IntrinsicHeight(
             child: Row(

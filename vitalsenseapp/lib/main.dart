@@ -26,10 +26,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'VitalSense',
       theme: ThemeData(
-        appBarTheme: AppBarTheme().copyWith(
-          backgroundColor: Color(0xFFFFF9F3),
+        appBarTheme: const AppBarTheme().copyWith(
+          backgroundColor: const Color(0xFFFFF9F3),
         ),
-        scaffoldBackgroundColor: Color(0xFFFFF9F3),
+        scaffoldBackgroundColor: const Color(0xFFFFF9F3),
       ),
       routes: {
         '/home': (context) => const HomePage(),
