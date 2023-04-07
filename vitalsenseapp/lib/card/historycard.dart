@@ -54,7 +54,10 @@ class HistoryCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('$warncount warning(s), $critcount critical(s) ',
-                    style: const TextStyle(fontFamily: 'Inter', fontSize: 12)),
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 12,
+                    )),
                 Text(
                   date,
                   style: const TextStyle(

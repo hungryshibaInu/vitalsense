@@ -21,6 +21,9 @@ class WarninglogPage extends StatelessWidget {
         ),
         elevation: 0,
       ),
+      body: const Center(
+        child: Text('Warning log'),
+      ),
     );
   }
 }

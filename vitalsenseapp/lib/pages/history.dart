@@ -197,11 +197,11 @@ class _HistoryPage extends State<HistoryPage> {
                                 items: const [
                                   DropdownMenuItem(
                                     value: 'eachDay',
-                                    child: Text('Day'),
+                                    child: Text('Week'),
                                   ),
                                   DropdownMenuItem(
                                     value: 'week',
-                                    child: Text('Week'),
+                                    child: Text('Month'),
                                   )
                                 ],
                                 onChanged: (String? value) {
@@ -219,11 +219,21 @@ class _HistoryPage extends State<HistoryPage> {
                             itemCount: _count,
                             itemBuilder: ((context, index) => InkWell(
                                   onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const WarninglogPage()));
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Container(
+                                            height: 500,
+                                            child: Text('this is bottomsheet'),
+                                          );
+                                        });
                                   },
+                                  // onTap: () {
+                                  //   Navigator.of(context).push(
+                                  //       MaterialPageRoute(
+                                  //           builder: (context) =>
+                                  //               const WarninglogPage()));
+                                  // },
                                   child: HistoryCard(
                                     date: (snapshot.data!.docs[index]['date'])
                                         .toString(), //needed to add week date
