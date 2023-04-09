@@ -181,9 +181,10 @@ class _HistoryPage extends State<HistoryPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'History ($_count)',
-                              style: const TextStyle(
+                            const Text(
+                              // 'History ($_count)',
+                              'History',
+                              style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold),
@@ -224,7 +225,23 @@ class _HistoryPage extends State<HistoryPage> {
                                         builder: (BuildContext context) {
                                           return Container(
                                             height: 500,
-                                            child: Text('this is bottomsheet'),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
+                                              child: ListView.builder(
+                                                itemBuilder: ((context,
+                                                        index) =>
+                                                    ListTile(
+                                                      title: Text(
+                                                        'test $index',
+                                                        style: TextStyle(
+                                                            fontFamily: 'Inter',
+                                                            fontSize: 15),
+                                                      ),
+                                                    )),
+                                                itemCount: 10,
+                                              ),
+                                            ),
                                           );
                                         });
                                   },
@@ -486,5 +503,15 @@ class _ChartState extends State<Chart> {
         );
       },
     );
+  }
+}
+
+//create bottom sheet from line 225
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
