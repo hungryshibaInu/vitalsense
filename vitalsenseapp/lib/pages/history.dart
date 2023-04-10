@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:vitalsenseapp/function/changecolorfunc.dart';
 // import 'package:rxdart/rxdart.dart';
-import 'warninglog.dart';
 // import 'package:vitalsenseapp/pages/home.dart';
 
 class BarchartValue {
@@ -26,25 +25,28 @@ class _HistoryPage extends State<HistoryPage> {
   List<BarchartValue> barListvalue = [];
   int _count = 0;
   String collection = 'eachDay';
+  // DateTime startDate = DateTime.parse('2022-01-01');
+  String startDate = '2022-01-01';
+
+  DateTime _selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // _getCount();
-    // getData();
-
-    // FirebaseFirestore.instance
-    //     .collection(collection)
-    //     .get()
-    //     .then((querySnapshot) {
-    //   querySnapshot.docs.forEach((doc) {
-    //     BarchartValue data = BarchartValue(
-    //       name: 'test',
-    //       value: doc.data()['rr'],
-    //     );
-    //     barListvalue.add(data);
-    //   });
-    // });
   }
 
   // void getData() async {
@@ -122,8 +124,10 @@ class _HistoryPage extends State<HistoryPage> {
             ),
           ),
           child: StreamBuilder<QuerySnapshot>(
-            stream:
-                FirebaseFirestore.instance.collection(collection).snapshots(),
+            stream: FirebaseFirestore.instance
+                .collection(collection)
+                .where('date', isGreaterThanOrEqualTo: _selectedDate.toString())
+                .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
@@ -181,13 +185,35 @@ class _HistoryPage extends State<HistoryPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              // 'History ($_count)',
-                              'History',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  // 'History ($_count)',
+                                  'History',
+                                  style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // Padding(
+                                //   padding: const EdgeInsets.only(left: 10),
+                                //   child: Text(
+                                //     '${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day}',
+                                //     style: TextStyle(
+                                //         fontSize: 12,
+                                //         fontWeight: FontWeight.bold),
+                                //   ),
+                                // ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: ElevatedButton(
+                                    onPressed: () => _selectDate(context),
+                                    child: Text(
+                                        '${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day}'),
+                                  ),
+                                ),
+                              ],
                             ),
                             DropdownButton(
                                 isDense: true,
@@ -198,11 +224,11 @@ class _HistoryPage extends State<HistoryPage> {
                                 items: const [
                                   DropdownMenuItem(
                                     value: 'eachDay',
-                                    child: Text('Week'),
+                                    child: Text('Day'),
                                   ),
                                   DropdownMenuItem(
                                     value: 'week',
-                                    child: Text('Month'),
+                                    child: Text('Week'),
                                   )
                                 ],
                                 onChanged: (String? value) {
@@ -220,27 +246,34 @@ class _HistoryPage extends State<HistoryPage> {
                             itemCount: _count,
                             itemBuilder: ((context, index) => InkWell(
                                   onTap: () {
+                                    setState(() {
+                                      startDate =
+                                          snapshot.data!.docs[index]['date'];
+                                    });
                                     showModalBottomSheet(
                                         context: context,
                                         builder: (BuildContext context) {
                                           return Container(
+                                            color: const Color(0xFFFFF9F3),
                                             height: 500,
                                             child: Padding(
                                               padding:
-                                                  const EdgeInsets.all(20.0),
-                                              child: ListView.builder(
-                                                itemBuilder: ((context,
-                                                        index) =>
-                                                    ListTile(
-                                                      title: Text(
-                                                        'test $index',
-                                                        style: TextStyle(
-                                                            fontFamily: 'Inter',
-                                                            fontSize: 15),
-                                                      ),
-                                                    )),
-                                                itemCount: 10,
-                                              ),
+                                                  const EdgeInsets.all(10.0),
+                                              child:
+                                                  Warninglog(date: startDate),
+                                              // child: ListView.builder(
+                                              //   itemBuilder: ((context,
+                                              //           index) =>
+                                              //       ListTile(
+                                              //         title: Text(
+                                              //           'test $index',
+                                              //           style: TextStyle(
+                                              //               fontFamily: 'Inter',
+                                              //               fontSize: 15),
+                                              //         ),
+                                              //       )),
+                                              //   itemCount: 10,
+                                              // ),
                                             ),
                                           );
                                         });
@@ -409,12 +442,14 @@ class Chart extends StatefulWidget {
   final String collection;
   final String vital;
   final String type; // temporary
+  final String date;
 
   const Chart(
       {super.key,
       required this.collection,
       required this.vital,
-      required this.type});
+      required this.type,
+      this.date = '2023-9-1'});
 
   @override
   State<Chart> createState() => _ChartState();
@@ -468,7 +503,8 @@ class _ChartState extends State<Chart> {
                   sideTitles: SideTitles(
                       getTitlesWidget: (value, meta) {
                         // return Text('dd/${value.toInt() + 10}');
-                        return Text(meta.formattedValue);
+                        return Text(widget.date.substring(5));
+                        // return Text(meta.formattedValue);
                       },
                       showTitles: true)),
               bottomTitles: AxisTitles(
@@ -507,11 +543,93 @@ class _ChartState extends State<Chart> {
 }
 
 //create bottom sheet from line 225
-class MyWidget extends StatelessWidget {
-  const MyWidget({super.key});
+class Warninglog extends StatefulWidget {
+  // final DateTime date;
+  final String date;
+
+  const Warninglog({super.key, required this.date});
 
   @override
+  State<Warninglog> createState() => _WarninglogState();
+}
+
+class _WarninglogState extends State<Warninglog> {
+  DateTime test = DateTime.parse('2023-5-25');
+  @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance
+          .collection('error')
+          .where('date', isEqualTo: widget.date)
+          .snapshots(),
+      builder: (BuildContext context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error.toString()}'),
+          );
+        }
+
+        if (!snapshot.hasData) {
+          return const Center(
+            child: Text('data'),
+          );
+        }
+        final List<DocumentSnapshot<Map<String, dynamic>>> docs =
+            snapshot.data!.docs;
+
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Warning Log (${widget.date}) :',
+                    style: const TextStyle(fontFamily: 'Inter'),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.only(top: 10),
+                height: 400,
+                child: ListView.builder(
+                  itemCount: docs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final Map<String, dynamic>? data = docs[index].data();
+
+                    return ListTile(
+                      leading: Text(
+                        // data!['time'],
+                        '${test.add(Duration(days: 7)).toString()}',
+                        style: const TextStyle(
+                            fontFamily: 'Inter',
+                            color: Color.fromARGB(255, 128, 127, 127)),
+                      ),
+                      title: Row(
+                        children: [
+                          Text(
+                            '${data!['type']}: ',
+                            style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16),
+                          ),
+                          Text(data['data'],
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  color: changelogColor(data['level']))),
+                        ],
+                      ),
+                      // subtitle: Text(data['type']),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

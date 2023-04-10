@@ -5,6 +5,9 @@ import 'package:vitalsenseapp/card/spo2.dart';
 import 'package:vitalsenseapp/card/bodytemp.dart';
 import 'package:vitalsenseapp/function/changecolorfunc.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import '../main.dart';
 
 // var colorlist = [
 //   Color.fromRGBO(152, 201, 122, 1),
@@ -32,6 +35,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  
+    Future<void> _showNotification() async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+      'channel_id',
+      'Channel Name',
+      channelDescription: 'Channel Description',
+      importance: Importance.high,
+      priority: Priority.high,
+    );
+
+    // const IOSNotificationDetails iOSNotificationDetails =
+    //     IOSNotificationDetails();
+    const DarwinNotificationDetails darwinNotificationDetails =
+        DarwinNotificationDetails(badgeNumber: 1);
+
+    const NotificationDetails plaformChannelDetails = NotificationDetails(
+        android: androidNotificationDetails, iOS: darwinNotificationDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+        0, 'warning 8:20', 'Respiration Rate: 4', plaformChannelDetails);
+  }
+
   final dbRef = FirebaseDatabase.instance.ref().child('Sensor');
   final databaseReference = FirebaseDatabase.instance.ref();
 

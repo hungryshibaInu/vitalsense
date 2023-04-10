@@ -57,3 +57,13 @@ Color changeColor(String name, int value) {
   }
   return colorlist[color];
 }
+
+Color changelogColor(String level) {
+  if (level == 'Danger') {
+    return colorlist[2];
+  } else if (level == 'Warning') {
+    return colorlist[1];
+  } else {
+    return colorlist[3];
+  }
+}
