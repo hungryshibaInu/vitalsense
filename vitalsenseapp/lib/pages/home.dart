@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:vitalsenseapp/card/heartrate.dart';
@@ -9,24 +11,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../main.dart';
 
-// var colorlist = [
-//   Color.fromRGBO(152, 201, 122, 1),
-//   Color.fromRGBO(252, 200, 66, 1),
-//   Color.fromRGBO(241, 66, 57, 1),
-// ];
-
-// Color changeColor(int value) {
-//   int color = 0;
-//   if (value >= 12 && value <= 20) {
-//     color = 0;
-//   } else if ((value >= 9 && value <= 11) || (value >= 21 && value <= 24)) {
-//     color = 1;
-//   } else if (value <= 8 || value >= 25) {
-//     color = 2;
-//   }
-//   return colorlist[color];
-// }
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -35,8 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
-    Future<void> _showNotification() async {
+  Future<void> _showNotification() async {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
       'channel_id',
@@ -61,7 +44,9 @@ class _HomePageState extends State<HomePage> {
   final dbRef = FirebaseDatabase.instance.ref().child('Sensor');
   final databaseReference = FirebaseDatabase.instance.ref();
 
-  String displayrr = '0';
+  String displayrr = '999';
+
+  StreamController<bool> _streamController = StreamController<bool>();
 
   @override
   void initState() {
@@ -75,8 +60,29 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         displayrr = '$rrtempdata';
       });
+      if (displayrr == '10') {
+        _showNotification();
+        // _streamController.add(true);
+      }
     });
   }
+
+  //   Future<void> _initValue() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     _value = prefs.getInt('value') ?? 0;
+  //   });
+  // }
+
+  // void sendnotification() {
+  //   // if (displayrr == '999') {
+  //   //   print('no data');
+  //   // } else {
+  //   if (int.parse(displayrr) >= 10) {
+  //     _showNotification();
+  //   }
+  //   // }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +118,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     onTap: () =>
                         Navigator.pushReplacementNamed(context, '/home')),
+                // _showNotification()),
                 ListTile(
                   leading: const Icon(
                     Icons.history_rounded,
