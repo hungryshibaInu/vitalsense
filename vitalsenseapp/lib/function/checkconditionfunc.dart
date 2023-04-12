@@ -37,11 +37,11 @@ String checkcondition(String name, int value) {
       break;
 
     case 'Skin Temperature':
-      if (value >= 36 && value <= 38) {
+      if (value >= 33 && value <= 38) {
         condition = 'Normal';
-      } else if (value == 35 || value == 39) {
+      } else if (value == 32 || (value >= 38 && value <= 39)) {
         condition = 'Warning';
-      } else if (value < 35 || value > 39) {
+      } else if (value < 32 || value > 39) {
         condition = 'Danger';
       }
       break;

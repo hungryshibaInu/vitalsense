@@ -43,11 +43,11 @@ Color changeColor(String name, int value) {
       break;
 
     case 'Skin Temperature':
-      if (value >= 36 && value <= 38) {
+      if (value >= 33 && value <= 38) {
         color = 0;
-      } else if (value == 35 || value == 39) {
+      } else if (value == 32 || (value >= 38 && value <= 39)) {
         color = 1;
-      } else if (value < 35 || value > 39) {
+      } else if (value < 32 || value > 39) {
         color = 2;
       }
       break;

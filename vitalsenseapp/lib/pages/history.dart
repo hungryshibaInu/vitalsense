@@ -5,7 +5,33 @@ import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:vitalsenseapp/function/changecolorfunc.dart';
+import 'package:intl/intl.dart';
+
+import 'login.dart';
+
 // import 'package:vitalsenseapp/pages/home.dart';
+DateTime getSundayOfWeek(DateTime date) {
+  if (DateFormat('EEEE').format(date) == 'Sunday') {
+    date = date.add(Duration(days: 1));
+  }
+  print(date);
+  return date.subtract(Duration(days: date.weekday));
+}
+
+String addLeadingZeros(String date) {
+  List<String> dateParts = date.split('-');
+  String year = dateParts[0];
+  String month = dateParts[1].padLeft(2, '0');
+  String day = dateParts[2].padLeft(2, '0');
+  return '$year-$month-$day';
+}
+
+String addLeadingZerosToTime(String timeString) {
+  List<String> timeParts = timeString.split(':');
+  String hour = timeParts[0].padLeft(2, '0');
+  String minute = timeParts[1].padLeft(2, '0');
+  return '$hour:$minute';
+}
 
 class BarchartValue {
   final String name;
@@ -24,8 +50,9 @@ class _HistoryPage extends State<HistoryPage> {
   List<BarchartValue> barListvalue = [];
   int _count = 0;
   String collection = 'eachDay';
-  // DateTime startDate = DateTime.parse('2022-01-01');
-  String startDate = '2022-01-01';
+  // String _date = '2022-01-01';
+  // DateTime _date = DateTime.parse('2022-01-01');
+  String _date = '2023-03-25';
 
   DateTime _selectedDate = DateTime.now();
 
@@ -33,12 +60,14 @@ class _HistoryPage extends State<HistoryPage> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
-      firstDate: DateTime(1900),
+      firstDate: DateTime(2000),
       lastDate: DateTime.now().add(Duration(days: 365)),
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
+        _date = addLeadingZeros(
+            '${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day}');
       });
     }
   }
@@ -48,31 +77,10 @@ class _HistoryPage extends State<HistoryPage> {
     super.initState();
   }
 
-  // void getData() async {
-  //   final QuerySnapshot snapshot =
-  //       await FirebaseFirestore.instance.collection(collection).get();
-  //   final List<BarchartValue> data = snapshot.docs.map((doc) {
-  //     return BarchartValue(name: 'test', value: doc['rr']);
-  //   }).toList();
-
-  //   setState(() {
-  //     barListvalue = data;
-  //   });
-  // }
-  // Future<void> _getCount() async {
-  //   QuerySnapshot querySnapshot =
-  //       await FirebaseFirestore.instance.collection('eachDay').get();
-
-  //   setState(() {
-  //     _count = querySnapshot.size;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SliderDrawer(
-          // sliderOpenSize: 2000,
           appBar: const SliderAppBar(
               drawerIconSize: 35,
               appBarHeight: 100,
@@ -117,6 +125,22 @@ class _HistoryPage extends State<HistoryPage> {
                     ),
                     onTap: () =>
                         Navigator.pushReplacementNamed(context, '/history'),
+                  ),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.logout,
+                      color: Colors.amber,
+                      size: 30,
+                    ),
+                    title: const Text(
+                      'Logout',
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                    onTap: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Login())),
                   )
                 ],
               ),
@@ -125,7 +149,15 @@ class _HistoryPage extends State<HistoryPage> {
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection(collection)
-                .where('date', isGreaterThanOrEqualTo: _selectedDate.toString())
+                .where('date',
+                    isGreaterThanOrEqualTo:
+                        (getSundayOfWeek(DateTime.parse(_date))
+                            .toString()
+                            .substring(0, 10)),
+                    isLessThanOrEqualTo: (getSundayOfWeek(DateTime.parse(_date))
+                            .add(Duration(days: 6)))
+                        .toString()
+                        .substring(0, 10))
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -158,21 +190,25 @@ class _HistoryPage extends State<HistoryPage> {
                               collection: collection,
                               vital: 'Heart Rate',
                               type: 'hr',
+                              date: _date,
                             ),
                             Chart(
                               collection: collection,
                               vital: 'SpO2',
                               type: 'spo2',
+                              date: _date,
                             ),
                             Chart(
                               collection: collection,
                               vital: 'Respiratory Rate',
                               type: 'rr',
+                              date: _date,
                             ),
                             Chart(
                               collection: collection,
                               vital: 'Skin Temperature',
                               type: 'bodytemp',
+                              date: _date,
                             ),
                           ],
                           options: CarouselOptions(viewportFraction: 1),
@@ -206,11 +242,18 @@ class _HistoryPage extends State<HistoryPage> {
                                 // ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: ElevatedButton(
-                                    onPressed: () => _selectDate(context),
-                                    child: Text(
-                                        '${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day}'),
-                                  ),
+                                  child: TextButton(
+                                      onPressed: () => _selectDate(context),
+                                      child: Text(
+                                        _date,
+                                        style: const TextStyle(
+                                            decoration:
+                                                TextDecoration.underline,
+                                            fontFamily: 'Inter',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal,
+                                            color: Colors.black),
+                                      )),
                                 ),
                               ],
                             ),
@@ -246,7 +289,7 @@ class _HistoryPage extends State<HistoryPage> {
                             itemBuilder: ((context, index) => InkWell(
                                   onTap: () {
                                     setState(() {
-                                      startDate =
+                                      _date =
                                           snapshot.data!.docs[index]['date'];
                                     });
                                     showModalBottomSheet(
@@ -258,31 +301,11 @@ class _HistoryPage extends State<HistoryPage> {
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.all(10.0),
-                                              child:
-                                                  Warninglog(date: startDate),
-                                              // child: ListView.builder(
-                                              //   itemBuilder: ((context,
-                                              //           index) =>
-                                              //       ListTile(
-                                              //         title: Text(
-                                              //           'test $index',
-                                              //           style: TextStyle(
-                                              //               fontFamily: 'Inter',
-                                              //               fontSize: 15),
-                                              //         ),
-                                              //       )),
-                                              //   itemCount: 10,
-                                              // ),
+                                              child: Warninglog(date: _date),
                                             ),
                                           );
                                         });
                                   },
-                                  // onTap: () {
-                                  //   Navigator.of(context).push(
-                                  //       MaterialPageRoute(
-                                  //           builder: (context) =>
-                                  //               const WarninglogPage()));
-                                  // },
                                   child: HistoryCard(
                                     date: (snapshot.data!.docs[index]['date'])
                                         .toString(), //needed to add week date
@@ -310,129 +333,6 @@ class _HistoryPage extends State<HistoryPage> {
               );
             },
           )),
-      // extendBodyBehindAppBar: true,
-      // appBar: AppBar(
-      //   // title: Text('text'),
-      //   elevation: 0,
-      //   foregroundColor: Colors.black,
-      //   // backgroundColor: Colors.transparent,
-      //   leading: Builder(builder: (BuildContext context) {
-      //     return Padding(
-      //       padding: const EdgeInsets.only(left: 10),
-      //       child: IconButton(
-      //         icon: const Icon(
-      //           Icons.menu,
-      //           size: 40,
-      //         ),
-      //         onPressed: () => Scaffold.of(context).openDrawer(),
-      //         tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-      //       ),
-      //     );
-      //   }),
-      // ),
-      // drawer: Drawer(
-      //   width: 200,
-      //   child: Padding(
-      //     padding: const EdgeInsets.only(top: 20, left: 10),
-      //     child: ListView(
-      //       physics: const NeverScrollableScrollPhysics(),
-      //       children: const [
-      //         ListTile(
-      //           leading: Icon(
-      //             Icons.home,
-      //             color: Colors.amber,
-      //           ),
-      //           title: Text(
-      //             'Home',
-      //             style: TextStyle(
-      //                 fontFamily: 'Inter', fontWeight: FontWeight.bold),
-      //           ),
-      //         ),
-      //         ListTile(
-      //           leading: Icon(
-      //             Icons.history,
-      //             color: Colors.amber,
-      //           ),
-      //           title: Text(
-      //             'History',
-      //             style: TextStyle(
-      //                 fontFamily: 'Inter', fontWeight: FontWeight.bold),
-      //           ),
-      //         )
-      //       ],
-      //     ),
-      //   ),
-      //   // child: ListView(
-      //   //   children: [
-      //   //     DrawerHeader(
-      //   //         child: Container(
-      //   //       color: Colors.black,
-      //   //       alignment: Alignment.center,
-      //   //       child: Text(
-      //   //         'aifaf',
-      //   //         style: TextStyle(color: Colors.white),
-      //   //       ),
-      //   //     ))
-      //   //   ],
-      //   // ),
-      // ),
-      // body: Container(
-      //   margin: const EdgeInsets.only(top: 80),
-      //   height: double.infinity,
-      //   width: double.infinity,
-      //   decoration: const BoxDecoration(
-      //       image: DecorationImage(
-      //           image:
-      //               AssetImage('assets/images/wall.jpg'), //change bg image here
-      //           fit: BoxFit.cover)),
-      //   child: Padding(
-      //     padding: const EdgeInsets.only(top: 38, left: 38, right: 38),
-      //     child: Column(
-      //       crossAxisAlignment: CrossAxisAlignment.center,
-      //       children: [
-      //         Container(
-      //           height: 200,
-      //           width: double.infinity,
-      //           color: Colors.cyan,
-      //           child: const Text('Graph'),
-      //         ),
-      //         Container(
-      //           margin: EdgeInsets.only(top: 20, bottom: 20),
-      //           alignment: Alignment.centerLeft,
-      //           child: const Text(
-      //             'History',
-      //             style: TextStyle(
-      //                 fontFamily: 'Inter',
-      //                 fontSize: 20,
-      //                 fontWeight: FontWeight.bold),
-      //           ),
-      //         ),
-      //         // Container(
-      //         //   // margin: EdgeInsets.only(top: 20),
-      //         //   height: 500,
-      //         //   child: ListView(
-      //         //     children: items,
-      //         //   ),
-      //         // )
-      //         SizedBox(
-      //             height: 445,
-      //             child: ListView.builder(
-      //               itemBuilder: ((context, index) => HistoryCard(
-      //                     warncount: '${index + 1}',
-      //                     critcount: '$index',
-      //                     hrvalue: '101',
-      //                     spo2value: '20',
-      //                     rrvalue: '16',
-      //                     skintempvalue: '36',
-      //                   )),
-      //               scrollDirection: Axis.vertical,
-      //               padding: const EdgeInsets.only(bottom: 20),
-      //               // addAutomaticKeepAlives: true,
-      //             )),
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
   }
 }
@@ -448,22 +348,28 @@ class Chart extends StatefulWidget {
       required this.collection,
       required this.vital,
       required this.type,
-      this.date = '2023-9-1'});
+      required this.date});
 
   @override
   State<Chart> createState() => _ChartState();
 }
 
 class _ChartState extends State<Chart> {
-  // final String collection;
-
-  // _ChartState({required this.collection});
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream:
-          FirebaseFirestore.instance.collection(widget.collection).snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection(widget.collection)
+          .where('date',
+              isGreaterThanOrEqualTo:
+                  (getSundayOfWeek(DateTime.parse(widget.date))
+                      .toString()
+                      .substring(0, 10)),
+              isLessThanOrEqualTo: (getSundayOfWeek(DateTime.parse(widget.date))
+                      .add(Duration(days: 6)))
+                  .toString()
+                  .substring(0, 10))
+          .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -473,7 +379,7 @@ class _ChartState extends State<Chart> {
         }
 
         List<BarchartValue> barListvalue = snapshot.data!.docs.map((doc) {
-          return BarchartValue(name: 'test', value: doc[widget.type]);
+          return BarchartValue(name: doc['date'], value: doc[widget.type]);
         }).toList();
 
         return Padding(
@@ -501,8 +407,9 @@ class _ChartState extends State<Chart> {
               topTitles: AxisTitles(
                   sideTitles: SideTitles(
                       getTitlesWidget: (value, meta) {
-                        // return Text('dd/${value.toInt() + 10}');
+                        // return Text('5/${value.toInt() + 10}');
                         return Text(widget.date.substring(5));
+                        // return Text(barListvalue.name[meta]);
                         // return Text(meta.formattedValue);
                       },
                       showTitles: true)),
@@ -553,13 +460,14 @@ class Warninglog extends StatefulWidget {
 }
 
 class _WarninglogState extends State<Warninglog> {
-  DateTime test = DateTime.parse('2023-5-25');
+  // DateTime test = DateTime.parse('2023-05-25');
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: FirebaseFirestore.instance
           .collection('error')
           .where('date', isEqualTo: widget.date)
+          // .orderBy((document) => addLeadingZerosToTime('${document['time']}'))
           .snapshots(),
       builder: (BuildContext context,
           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
@@ -576,6 +484,8 @@ class _WarninglogState extends State<Warninglog> {
         }
         final List<DocumentSnapshot<Map<String, dynamic>>> docs =
             snapshot.data!.docs;
+        docs.sort((a, b) => addLeadingZerosToTime('${a['time']}')
+            .compareTo(addLeadingZerosToTime('${b['time']}')));
 
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -599,16 +509,17 @@ class _WarninglogState extends State<Warninglog> {
 
                     return ListTile(
                       leading: Text(
-                        // data!['time'],
-                        '${test.add(Duration(days: 7)).toString()}',
+                        data!['time'],
+                        // '${test.add(Duration(days: 7)).toString()}',
                         style: const TextStyle(
+                            fontWeight: FontWeight.bold,
                             fontFamily: 'Inter',
                             color: Color.fromARGB(255, 128, 127, 127)),
                       ),
                       title: Row(
                         children: [
                           Text(
-                            '${data!['type']}: ',
+                            '${data['type']}: ',
                             style: const TextStyle(
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.normal,

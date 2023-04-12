@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:vitalsenseapp/card/heartrate.dart';
@@ -7,9 +6,8 @@ import 'package:vitalsenseapp/card/spo2.dart';
 import 'package:vitalsenseapp/card/bodytemp.dart';
 import 'package:vitalsenseapp/function/changecolorfunc.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-// import '../main.dart';
+import 'login.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,34 +17,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Future<void> _showNotification() async {
-  //   const AndroidNotificationDetails androidNotificationDetails =
-  //       AndroidNotificationDetails(
-  //     'channel_id',
-  //     'Channel Name',
-  //     channelDescription: 'Channel Description',
-  //     importance: Importance.high,
-  //     priority: Priority.high,
-  //   );
-
-  //   // const IOSNotificationDetails iOSNotificationDetails =
-  //   //     IOSNotificationDetails();
-  //   const DarwinNotificationDetails darwinNotificationDetails =
-  //       DarwinNotificationDetails(badgeNumber: 1);
-
-  //   const NotificationDetails plaformChannelDetails = NotificationDetails(
-  //       android: androidNotificationDetails, iOS: darwinNotificationDetails);
-
-  //   await flutterLocalNotificationsPlugin.show(
-  //       0, 'warning 8:20', 'Respiration Rate: 4', plaformChannelDetails);
-  // }
-
   final dbRef = FirebaseDatabase.instance.ref().child('Sensor');
   final databaseReference = FirebaseDatabase.instance.ref();
 
   String displayrr = '0';
-
-  // StreamController<bool> _streamController = StreamController<bool>();
 
   @override
   void initState() {
@@ -60,29 +34,8 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         displayrr = '$rrtempdata';
       });
-      // if (displayrr == '10') {
-      //   _showNotification();
-      //   // _streamController.add(true);
-      // }
     });
   }
-
-  //   Future<void> _initValue() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     _value = prefs.getInt('value') ?? 0;
-  //   });
-  // }
-
-  // void sendnotification() {
-  //   // if (displayrr == '999') {
-  //   //   print('no data');
-  //   // } else {
-  //   if (int.parse(displayrr) >= 10) {
-  //     _showNotification();
-  //   }
-  //   // }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +69,8 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.bold,
                           fontSize: 20),
                     ),
+                    // onTap: () =>
+                    //     Navigator.pushReplacementNamed(context, '/home')),
                     onTap: () =>
                         Navigator.pushReplacementNamed(context, '/home')),
                 // _showNotification()),
@@ -134,6 +89,22 @@ class _HomePageState extends State<HomePage> {
                   ),
                   onTap: () =>
                       Navigator.pushReplacementNamed(context, '/history'),
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.logout,
+                    color: Colors.amber,
+                    size: 30,
+                  ),
+                  title: const Text(
+                    'Logout',
+                    style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Login())),
                 )
               ],
             ),
