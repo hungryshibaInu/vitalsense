@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vitalsenseapp/function/changecolorfunc.dart';
 
@@ -7,6 +8,67 @@ import 'package:vitalsenseapp/function/changecolorfunc.dart';
 //   const Color.fromRGBO(241, 66, 57, 1),
 // ];
 
+Widget getWarnCritCount(String date, String level) {
+  return FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+    future: FirebaseFirestore.instance
+        .collection('error')
+        .where('date', isEqualTo: date)
+        .where('level', isEqualTo: level)
+        .get(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.done) {
+        // if (snapshot.hasError) {
+        //   return Text('Error: ${snapshot.error}');
+        // } else {
+        int? dataSize = snapshot.data?.size;
+
+        if (level == 'Warning') {
+          return Text('$dataSize warning(s), ',
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 12,
+              ));
+        } else if (level == 'Danger') {
+          return Text('$dataSize critical(s)',
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 12,
+              ));
+        } else {
+          return Text('Error');
+        }
+        // return Text('$dataSize warning(s)');
+      } else {
+        return Text('Loading...');
+      }
+    },
+  );
+}
+
+// Future<String> getWarningCount(String level, String date) async {
+//   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+//       .collection('error')
+//       .where('date', isEqualTo: date)
+//       .where('level', isEqualTo: level)
+//       .get();
+
+//   return querySnapshot.size.toString();
+// }
+// Future<String> getWarnCritCount(String date, String level) async {
+//   try {
+//     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+//         .instance
+//         .collection('error')
+//         .where('date', isEqualTo: date)
+//         .where('level', isEqualTo: level)
+//         .get();
+//     int dataSize = snapshot.size;
+//     return '$dataSize';
+//   } catch (e) {
+//     return 'Error: $e';
+//   }
+// }
+
 class HistoryCard extends StatelessWidget {
   final String date;
   final String warncount;
@@ -15,6 +77,7 @@ class HistoryCard extends StatelessWidget {
   final String spo2value;
   final String rrvalue;
   final String skintempvalue;
+  final String level;
 
   const HistoryCard(
       {super.key,
@@ -24,7 +87,8 @@ class HistoryCard extends StatelessWidget {
       this.hrvalue = '0',
       this.rrvalue = '0',
       this.skintempvalue = '0',
-      this.spo2value = '0'});
+      this.spo2value = '0',
+      required this.level});
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +117,44 @@ class HistoryCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('$warncount warning(s), $critcount critical(s) ',
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 12,
-                    )),
+                Row(
+                  children: [
+                    getWarnCritCount(date, 'Warning'),
+                    getWarnCritCount(date, 'Danger'),
+                  ],
+                ),
+
+                // Row(
+                //   children: [
+                //     FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                //       future: FirebaseFirestore.instance
+                //           .collection('error')
+                //           .where('date', isEqualTo: date)
+                //           .where('level', isEqualTo: level)
+                //           .get(),
+                //       builder: (context, snapshot) {
+                //         if (snapshot.hasData) {
+                //           // Use snapshot.data to display the retrieved data
+                //           return Text(
+                //               '${snapshot.data?.size.toString()} warning(s)',
+                //               style: const TextStyle(
+                //                 fontFamily: 'Inter',
+                //                 fontSize: 12,
+                //               ));
+                //         } else if (snapshot.hasError) {
+                //           return Text('Error: ${snapshot.error}');
+                //         } else {
+                //           return Text('Loading...');
+                //         }
+                //       },
+                //     ),
+                //   ],
+                // ),
+                // Text('$warncount warning(s), $critcount critical(s) ',
+                //     style: const TextStyle(
+                //       fontFamily: 'Inter',
+                //       fontSize: 12,
+                //     )),
                 Text(
                   date,
                   style: const TextStyle(

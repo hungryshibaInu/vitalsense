@@ -10,12 +10,29 @@ import 'package:intl/intl.dart';
 import 'login.dart';
 
 // import 'package:vitalsenseapp/pages/home.dart';
+Future<String> getWarningCount(String level, String date) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('error')
+      .where('date', isEqualTo: date)
+      .where('level', isEqualTo: level)
+      .get();
+
+  return querySnapshot.size.toString();
+}
+
 DateTime getSundayOfWeek(DateTime date) {
   if (DateFormat('EEEE').format(date) == 'Sunday') {
     date = date.add(Duration(days: 1));
   }
-  print(date);
   return date.subtract(Duration(days: date.weekday));
+}
+
+DateTime getFirstDayOfMonth(DateTime date) {
+  return DateTime(date.year, date.month, 1);
+}
+
+DateTime getLastDayOfMonth(DateTime date) {
+  return DateTime(date.year, date.month + 1, 0);
 }
 
 String addLeadingZeros(String date) {
@@ -49,12 +66,21 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPage extends State<HistoryPage> {
   List<BarchartValue> barListvalue = [];
   int _count = 0;
+  int _warningcount = 0;
+  int _dangercount = 0;
   String collection = 'eachDay';
   // String _date = '2022-01-01';
   // DateTime _date = DateTime.parse('2022-01-01');
   String _date = '2023-03-25';
 
   DateTime _selectedDate = DateTime.now();
+
+  // void _updatecount(int warningcount, int dangercount) {
+  //   setState(() {
+  //     _warningcount = warningcount;
+  //     _dangercount = dangercount;
+  //   });
+  // }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -79,6 +105,43 @@ class _HistoryPage extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    Query<Map<String, dynamic>> streamcollection = FirebaseFirestore.instance
+        .collection(collection)
+        .where('date',
+            isGreaterThanOrEqualTo: (getSundayOfWeek(DateTime.parse(_date))
+                .toString()
+                .substring(0, 10)),
+            isLessThanOrEqualTo:
+                (getSundayOfWeek(DateTime.parse(_date)).add(Duration(days: 6)))
+                    .toString()
+                    .substring(0, 10));
+
+    // if (collection == 'eachDay') {
+    //   streamcollection = FirebaseFirestore.instance
+    //       .collection(collection)
+    //       .where('date',
+    //           isGreaterThanOrEqualTo: (getSundayOfWeek(DateTime.parse(_date))
+    //               .toString()
+    //               .substring(0, 10)),
+    //           isLessThanOrEqualTo: (getSundayOfWeek(DateTime.parse(_date))
+    //                   .add(Duration(days: 6)))
+    //               .toString()
+    //               .substring(0, 10));
+    // } else
+    if (collection == 'week') {
+      setState(() {
+        streamcollection = FirebaseFirestore.instance
+            .collection(collection)
+            .where('date',
+                isGreaterThanOrEqualTo:
+                    (getFirstDayOfMonth(DateTime.parse(_date)))
+                        .toString()
+                        .substring(0, 10),
+                isLessThanOrEqualTo: (getLastDayOfMonth(DateTime.parse(_date)))
+                    .toString()
+                    .substring(0, 10));
+      });
+    }
     return Scaffold(
       body: SliderDrawer(
           appBar: const SliderAppBar(
@@ -147,18 +210,19 @@ class _HistoryPage extends State<HistoryPage> {
             ),
           ),
           child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection(collection)
-                .where('date',
-                    isGreaterThanOrEqualTo:
-                        (getSundayOfWeek(DateTime.parse(_date))
-                            .toString()
-                            .substring(0, 10)),
-                    isLessThanOrEqualTo: (getSundayOfWeek(DateTime.parse(_date))
-                            .add(Duration(days: 6)))
-                        .toString()
-                        .substring(0, 10))
-                .snapshots(),
+            // stream: FirebaseFirestore.instance
+            //     .collection(collection)
+            //     .where('date',
+            //         isGreaterThanOrEqualTo:
+            //             (getSundayOfWeek(DateTime.parse(_date))
+            //                 .toString()
+            //                 .substring(0, 10)),
+            //         isLessThanOrEqualTo: (getSundayOfWeek(DateTime.parse(_date))
+            //                 .add(Duration(days: 6)))
+            //             .toString()
+            //             .substring(0, 10))
+            //     .snapshots(),
+            stream: streamcollection.snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
@@ -168,6 +232,13 @@ class _HistoryPage extends State<HistoryPage> {
                 return const Text('Loading...');
               }
               _count = snapshot.data!.docs.length;
+
+              FirebaseFirestore.instance
+                  .collection('error')
+                  .get()
+                  .then((querySnapshot) {
+                _warningcount = querySnapshot.docs.length;
+              });
 
               return Container(
                 height: double.infinity,
@@ -191,24 +262,28 @@ class _HistoryPage extends State<HistoryPage> {
                               vital: 'Heart Rate',
                               type: 'hr',
                               date: _date,
+                              unit: 'BPM',
                             ),
                             Chart(
                               collection: collection,
                               vital: 'SpO2',
                               type: 'spo2',
                               date: _date,
+                              unit: 'Percentage (%)',
                             ),
                             Chart(
                               collection: collection,
                               vital: 'Respiratory Rate',
                               type: 'rr',
                               date: _date,
+                              unit: 'Breaths/Min',
                             ),
                             Chart(
                               collection: collection,
                               vital: 'Skin Temperature',
                               type: 'bodytemp',
                               date: _date,
+                              unit: 'Celsius (°C)',
                             ),
                           ],
                           options: CarouselOptions(viewportFraction: 1),
@@ -301,15 +376,67 @@ class _HistoryPage extends State<HistoryPage> {
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.all(10.0),
-                                              child: Warninglog(date: _date),
+                                              child: Warninglog(
+                                                date: _date,
+                                                collection: collection,
+                                                // callback: _updatecount,
+                                              ),
                                             ),
                                           );
                                         });
                                   },
                                   child: HistoryCard(
                                     date: (snapshot.data!.docs[index]['date'])
-                                        .toString(), //needed to add week date
-                                    warncount: '${index + 1}',
+                                        .toString(),
+                                    level: 'Danger',
+                                    // warncount:  await getWarningCount('Warning', (snapshot.data!
+                                    //               .docs[index]['date'])
+                                    //           .toString()),
+                                    // warncount: '${index + 1}',
+                                    // warncount: _warningcount.toString(),
+                                    // warncount: StreamBuilder<QuerySnapshot>(
+                                    //   stream: FirebaseFirestore.instance
+                                    //       .collection('error')
+                                    //       .where('date',
+                                    //           isEqualTo: (snapshot.data!
+                                    //                   .docs[index]['date'])
+                                    //               .toString())
+                                    //       .where('level', isEqualTo: 'Warning')
+                                    //       .snapshots(),
+                                    //   builder: (BuildContext context,
+                                    //       AsyncSnapshot<QuerySnapshot>
+                                    //           snapshot) {
+                                    //     // if (snapshot.hasData) {
+                                    //     int count = snapshot.data!.docs.length;
+                                    //     print(count.toString());
+                                    //     return Text(count.toString());
+                                    //     // } else {
+                                    //     //   return '0';
+                                    //     // }
+                                    //   },
+                                    // ),
+                                    // warncount: (FirebaseFirestore.instance
+                                    //         .collection('error')
+                                    //         .where('date',
+                                    //             isEqualTo: snapshot
+                                    //                 .data!.docs[index]['date']
+                                    //                 .toString())
+                                    //         .where('level',
+                                    //             isEqualTo: 'Warning')
+                                    // .snapshots())
+                                    //     .toString(),
+                                    // warncount: FirebaseFirestore.instance
+                                    //     .collection('error')
+                                    //     .where('date',
+                                    //         isEqualTo: snapshot
+                                    //             .data!.docs[index]['date']
+                                    //             .toString())
+                                    //     .where('level', isEqualTo: 'Warning')
+                                    //     .get()
+                                    //     .then((querySnapshot) =>
+                                    //         "Total Count: ${querySnapshot.size}")
+                                    //     .catchError((error) =>
+                                    //         "Error getting total count: $error"),
                                     critcount: '$index',
                                     hrvalue: (snapshot.data!.docs[index]['hr'])
                                         .toString(),
@@ -342,13 +469,15 @@ class Chart extends StatefulWidget {
   final String vital;
   final String type; // temporary
   final String date;
+  final String unit;
 
   const Chart(
       {super.key,
       required this.collection,
       required this.vital,
       required this.type,
-      required this.date});
+      required this.date,
+      required this.unit});
 
   @override
   State<Chart> createState() => _ChartState();
@@ -357,19 +486,47 @@ class Chart extends StatefulWidget {
 class _ChartState extends State<Chart> {
   @override
   Widget build(BuildContext context) {
+    Query<Map<String, dynamic>> streamcollection = FirebaseFirestore.instance
+        .collection(widget.collection)
+        .where('date',
+            isGreaterThanOrEqualTo:
+                (getSundayOfWeek(DateTime.parse(widget.date))
+                    .toString()
+                    .substring(0, 10)),
+            isLessThanOrEqualTo: (getSundayOfWeek(DateTime.parse(widget.date))
+                    .add(Duration(days: 6)))
+                .toString()
+                .substring(0, 10));
+
+    if (widget.collection == 'week') {
+      setState(() {
+        streamcollection = FirebaseFirestore.instance
+            .collection(widget.collection)
+            .where('date',
+                isGreaterThanOrEqualTo:
+                    (getFirstDayOfMonth(DateTime.parse(widget.date)))
+                        .toString()
+                        .substring(0, 10),
+                isLessThanOrEqualTo:
+                    (getLastDayOfMonth(DateTime.parse(widget.date)))
+                        .toString()
+                        .substring(0, 10));
+      });
+    }
+
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection(widget.collection)
-          .where('date',
-              isGreaterThanOrEqualTo:
-                  (getSundayOfWeek(DateTime.parse(widget.date))
-                      .toString()
-                      .substring(0, 10)),
-              isLessThanOrEqualTo: (getSundayOfWeek(DateTime.parse(widget.date))
-                      .add(Duration(days: 6)))
-                  .toString()
-                  .substring(0, 10))
-          .snapshots(),
+      // stream: FirebaseFirestore.instance
+      //     .collection(widget.collection)
+      //     .where('date',
+      //         isGreaterThanOrEqualTo:
+      //             (getSundayOfWeek(DateTime.parse(widget.date))
+      //                 .toString()
+      //                 .substring(0, 10)),
+      //         isLessThanOrEqualTo: (getSundayOfWeek(DateTime.parse(widget.date))
+      //                 .add(Duration(days: 6)))
+      //             .toString()
+      //             .substring(0, 10))
+      stream: streamcollection.snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -407,8 +564,11 @@ class _ChartState extends State<Chart> {
               topTitles: AxisTitles(
                   sideTitles: SideTitles(
                       getTitlesWidget: (value, meta) {
+                        return Text(
+                            barListvalue[value.toInt()].name.substring(5));
                         // return Text('5/${value.toInt() + 10}');
-                        return Text(widget.date.substring(5));
+                        // return Text(widget.date.substring(5));
+                        // return Text(barListvalue.length.toString());
                         // return Text(barListvalue.name[meta]);
                         // return Text(meta.formattedValue);
                       },
@@ -421,6 +581,14 @@ class _ChartState extends State<Chart> {
                 ),
               ),
               leftTitles: AxisTitles(
+                  axisNameWidget: Text(
+                    widget.unit,
+                    style: TextStyle(
+                        // fontFamily: 'Inter',
+                        fontWeight: FontWeight.normal,
+                        fontSize: 12),
+                  ),
+                  axisNameSize: 30,
                   sideTitles: SideTitles(
                       getTitlesWidget: (value, meta) {
                         return Text(
@@ -452,23 +620,51 @@ class _ChartState extends State<Chart> {
 class Warninglog extends StatefulWidget {
   // final DateTime date;
   final String date;
+  final String collection;
+  // final Function(int, int) callback;
 
-  const Warninglog({super.key, required this.date});
+  const Warninglog({
+    super.key,
+    required this.date,
+    required this.collection,
+    // required this.callback
+  });
 
   @override
   State<Warninglog> createState() => _WarninglogState();
 }
 
 class _WarninglogState extends State<Warninglog> {
+  // int warningcount = 0;
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> _buildStream() {
+    CollectionReference<Map<String, dynamic>> _collection =
+        FirebaseFirestore.instance.collection('error');
+    Query<Map<String, dynamic>> query = _collection;
+
+    if (widget.collection == 'week') {
+      query = query.where('date',
+          isGreaterThanOrEqualTo: widget.date,
+          isLessThanOrEqualTo:
+              ((DateTime.parse(widget.date)).add(Duration(days: 6)))
+                  .toString()
+                  .substring(0, 10));
+    } else
+      query = query.where('date', isEqualTo: widget.date);
+
+    return query.snapshots();
+  }
+
   // DateTime test = DateTime.parse('2023-05-25');
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance
-          .collection('error')
-          .where('date', isEqualTo: widget.date)
-          // .orderBy((document) => addLeadingZerosToTime('${document['time']}'))
-          .snapshots(),
+      // stream: FirebaseFirestore.instance
+      //     .collection('error')
+      //     .where('date', isEqualTo: widget.date)
+      //     // .orderBy((document) => addLeadingZerosToTime('${document['time']}'))
+      //     .snapshots(),
+      stream: _buildStream(),
       builder: (BuildContext context,
           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
         if (snapshot.hasError) {
@@ -482,10 +678,16 @@ class _WarninglogState extends State<Warninglog> {
             child: Text('data'),
           );
         }
+
         final List<DocumentSnapshot<Map<String, dynamic>>> docs =
             snapshot.data!.docs;
         docs.sort((a, b) => addLeadingZerosToTime('${a['time']}')
             .compareTo(addLeadingZerosToTime('${b['time']}')));
+
+        // setState(() {
+        //   warningcount = docs.length;
+        //   widget.callback(warningcount, docs.length);
+        // });
 
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -494,7 +696,8 @@ class _WarninglogState extends State<Warninglog> {
               Row(
                 children: [
                   Text(
-                    'Warning Log (${widget.date}) :',
+                    // 'Warning Log (${widget.date}) :',
+                    'Warning Log :',
                     style: const TextStyle(fontFamily: 'Inter'),
                   ),
                 ],

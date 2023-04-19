@@ -6,7 +6,10 @@ import 'package:vitalsenseapp/card/spo2.dart';
 import 'package:vitalsenseapp/card/bodytemp.dart';
 import 'package:vitalsenseapp/function/changecolorfunc.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
+import 'package:provider/provider.dart';
+import 'package:vitalsenseapp/pages/notification.dart';
 
+import '../main.dart';
 import 'login.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,16 +42,32 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final myModel = Provider.of<MyModel>(context);
     return Scaffold(
       body: SliderDrawer(
         // sliderOpenSize: 2000,
-        appBar: const SliderAppBar(
-            drawerIconSize: 35,
-            appBarHeight: 100,
-            appBarPadding: EdgeInsets.only(top: 50),
-            appBarColor: Colors.white,
-            title: Text('',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
+        appBar: SliderAppBar(
+          drawerIconSize: 35,
+          appBarHeight: 100,
+          appBarPadding: EdgeInsets.only(top: 50),
+          appBarColor: Colors.white,
+          title: Text('',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+          trailing: Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: IconButton(
+                onPressed: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const NotiPage())),
+                icon: Icon(
+                  Icons.notifications_on_outlined,
+                  size: 30,
+                )),
+            // child: Icon(
+            //   Icons.notifications_on_outlined,
+            //   size: 30,
+            // ),
+          ),
+        ),
         slider: Drawer(
           width: 200,
           child: Padding(
@@ -200,11 +219,11 @@ class _HomePageState extends State<HomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [bodytempCard(), spo2Card(), homeCard()],
+                children: [bodytempCard(), spo2Card(), homeCard()],
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(top: 80),
-                child: Text(' last update: 00.00 00/00/00',
+                child: Text(myModel.myVariable,
                     style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 15,

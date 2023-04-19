@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:vitalsenseapp/function/checkconditionfunc.dart';
+import 'package:vitalsenseapp/pages/notification.dart';
 import 'model/firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'pages/login.dart';
@@ -9,6 +10,7 @@ import 'pages/home.dart';
 import 'pages/register.dart';
 import 'pages/history.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -35,7 +37,24 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyAppWrapper());
+  // runApp(MyAppWrapper());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => MyModel(),
+      child: MyAppWrapper(),
+    ),
+  );
+}
+
+class MyModel extends ChangeNotifier {
+  String _myVariable = '';
+
+  String get myVariable => _myVariable;
+
+  set myVariable(String value) {
+    _myVariable = value;
+    notifyListeners();
+  }
 }
 
 class MyAppWrapper extends StatelessWidget {
@@ -53,6 +72,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late final MyModel myModel;
+
   Future<void> _showNotification(
       int id, String level, String type, int value) async {
     // const AndroidNotificationDetails androidNotificationDetails =
@@ -78,13 +99,24 @@ class _MyAppState extends State<MyApp> {
   // final databaseReference = FirebaseDatabase.instance.ref();
   final databaseReference = FirebaseDatabase.instance.ref();
 
+  // void addToNotiList(String _type, String _text, String _time) {
+  //   NotiPage notiPage = NotiPage();
+  //   notiPage.addNotiList(_type, _text, _time);
+  //   // setState(() {
+  //   //   // notiList.add(Notification(type: _type, text: _text, time: _time));
+  //   // });
+  // }
+  // final GlobalKey<_NotiPageState> notiPageKey = GlobalKey();
+  // final _NotiPageState notiPageState = notiPageKey.currentState;
+
   @override
   void initState() {
-    _activatelistenerrr();
+    _activatelistener();
     super.initState();
+    myModel = Provider.of<MyModel>(context, listen: false);
   }
 
-  void _activatelistenerrr() {
+  void _activatelistener() {
     //check RR
     databaseReference.child('Sensor/rr/data').onValue.listen((event) {
       final tempdata = event.snapshot.value;
@@ -99,9 +131,12 @@ class _MyAppState extends State<MyApp> {
         _showNotification(uniqueId, '$condition🔴', 'Respiratory Rate',
             int.parse('$tempdata'));
       }
+      myModel._myVariable =
+          'last updated at ${DateTime.now().toString().substring(0, 19)}';
+      // print('rr: $condition');
     });
 
-    //check HR
+    // check HR
     databaseReference.child('Sensor/hr/data').onValue.listen((event) {
       final tempdata = event.snapshot.value;
       int uniqueId = Random().nextInt(100000);
@@ -114,6 +149,9 @@ class _MyAppState extends State<MyApp> {
         _showNotification(
             uniqueId, '$condition🔴', 'Heart Rate', int.parse('$tempdata'));
       }
+      myModel._myVariable =
+          'last updated et ${DateTime.now().toString().substring(0, 19)}';
+      // print('hr: $condition');
     });
 
     //check SpO2
@@ -129,6 +167,9 @@ class _MyAppState extends State<MyApp> {
         _showNotification(
             uniqueId, '$condition🔴', 'SpO2', int.parse('$tempdata'));
       }
+      myModel._myVariable =
+          'last updated at ${DateTime.now().toString().substring(0, 19)}';
+      // print(condition);
     });
 
     //check Skin Temperature
@@ -145,11 +186,14 @@ class _MyAppState extends State<MyApp> {
         _showNotification(uniqueId, '$condition🔴', 'Skin Temperature',
             int.parse('$tempdata'));
       }
+      myModel._myVariable =
+          'last updated at ${DateTime.now().toString().substring(0, 19)}';
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // final myModel = Provider.of<MyModel>(context);
     return MaterialApp(
       title: 'VitalSense',
       theme: ThemeData(
@@ -163,8 +207,8 @@ class _MyAppState extends State<MyApp> {
         '/history': (context) => const HistoryPage(),
       },
       // home: const Login(),
-      // home: const HomePage(),
-      home: const HistoryPage(),
+      home: const HomePage(),
+      // home: const HistoryPage(),
     );
   }
 }

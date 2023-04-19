@@ -56,7 +56,10 @@ class _LoginState extends State<Login> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset("assets/images/Vector.png"),
+                        SizedBox(
+                            height: 150,
+                            width: 150,
+                            child: Image.asset("assets/images/logo_new.png")),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
