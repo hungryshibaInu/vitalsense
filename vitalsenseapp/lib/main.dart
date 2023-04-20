@@ -99,12 +99,12 @@ class _MyAppState extends State<MyApp> {
   // final databaseReference = FirebaseDatabase.instance.ref();
   final databaseReference = FirebaseDatabase.instance.ref();
 
-  // void addToNotiList(String _type, String _text, String _time) {
+  // void addToNotiList(Icon _type, String _text, String _time) {
   //   NotiPage notiPage = NotiPage();
   //   notiPage.addNotiList(_type, _text, _time);
-  //   // setState(() {
-  //   //   // notiList.add(Notification(type: _type, text: _text, time: _time));
-  //   // });
+    // setState(() {
+    //   // notiList.add(Notification(type: _type, text: _text, time: _time));
+    // });
   // }
   // final GlobalKey<_NotiPageState> notiPageKey = GlobalKey();
   // final _NotiPageState notiPageState = notiPageKey.currentState;
