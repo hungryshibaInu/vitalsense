@@ -76,25 +76,35 @@ class _NotiPageState extends State<NotiPage> {
               ),
               onPressed: () => Navigator.pop(context),
             )),
-        body: StreamBuilder<QuerySnapshot>(
+        body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseFirestore.instance
               .collection('error')
               .where('date',
-                  isEqualTo: (DateTime.now()).toString().substring(0, 10))
+                  // isEqualTo: (DateTime.now()).toString().substring(0, 10))
+                  isEqualTo: '2023-04-20')
               .snapshots(),
-          builder: (context, snapshot) {
+          builder: (BuildContext context,
+              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.hasData) {
+              final List<DocumentSnapshot<Map<String, dynamic>>> docs =
+                  snapshot.data!.docs;
+
+              docs.sort((a, b) => addLeadingZerosToTime('${a['time']}')
+                  .compareTo(addLeadingZerosToTime('${b['time']}')));
+
               return ListView.builder(
-                itemCount: snapshot.data!.docs.length,
+                itemCount: docs.length,
                 itemBuilder: (context, index) {
+                  final Map<String, dynamic>? noti = docs[index].data();
+
                   String emoji = '🟠';
-                  if (snapshot.data!.docs[index]['level'] == 'Danger') {
+                  if (noti!['level'] == 'Danger') {
                     emoji = '🔴';
-                  } else if (snapshot.data!.docs[index]['level'] == 'Warning') {
+                  } else if (noti['level'] == 'Warning') {
                     emoji = '🟡';
                   }
 
-                  DocumentSnapshot noti = snapshot.data!.docs[index];
+                  //  DocumentSnapshot noti = snapshot.data!.docs[index];
 
                   return ListTile(
                     leading: Container(
@@ -117,6 +127,10 @@ class _NotiPageState extends State<NotiPage> {
                     ),
                   );
                 },
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error.toString()}'),
               );
             }
             return const Center(
