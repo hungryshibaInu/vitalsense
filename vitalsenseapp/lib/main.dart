@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:vitalsenseapp/function/checkconditionfunc.dart';
-import 'package:vitalsenseapp/pages/notification.dart';
 import 'model/firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'pages/login.dart';
@@ -102,9 +101,9 @@ class _MyAppState extends State<MyApp> {
   // void addToNotiList(Icon _type, String _text, String _time) {
   //   NotiPage notiPage = NotiPage();
   //   notiPage.addNotiList(_type, _text, _time);
-    // setState(() {
-    //   // notiList.add(Notification(type: _type, text: _text, time: _time));
-    // });
+  // setState(() {
+  //   // notiList.add(Notification(type: _type, text: _text, time: _time));
+  // });
   // }
   // final GlobalKey<_NotiPageState> notiPageKey = GlobalKey();
   // final _NotiPageState notiPageState = notiPageKey.currentState;
@@ -206,8 +205,8 @@ class _MyAppState extends State<MyApp> {
         '/home': (context) => const HomePage(),
         '/history': (context) => const HistoryPage(),
       },
-      // home: const Login(),
-      home: const HomePage(),
+      home: const Login(),
+      // home: const HomePage(),
       // home: const HistoryPage(),
     );
   }

@@ -250,7 +250,10 @@ class VitalSign extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: [
-            Image.asset(imgurl),
+            Image.asset(
+              imgurl,
+              height: 14,
+            ),
             Container(
               margin: const EdgeInsets.only(left: 6),
               child: Text(

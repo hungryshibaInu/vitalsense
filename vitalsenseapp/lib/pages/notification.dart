@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:vitalsenseapp/pages/history.dart';
 
 String iconSelector(String _type) {
   switch (_type) {
@@ -13,6 +14,21 @@ String iconSelector(String _type) {
       return 'assets/images/lung.png';
     default:
       return 'assets/images/hricon.png';
+  }
+}
+
+String textTranslate(String _type) {
+  switch (_type) {
+    case 'Hr':
+      return 'Heart Rate';
+    case 'Spo2':
+      return 'Oxygen Saturation';
+    case 'BodyTemp':
+      return 'Body Temperature';
+    case 'RR':
+      return 'Respiratory Rate';
+    default:
+      return '???';
   }
 }
 
@@ -73,11 +89,13 @@ class _NotiPageState extends State<NotiPage> {
                 itemBuilder: (context, index) {
                   String emoji = '🟠';
                   if (snapshot.data!.docs[index]['level'] == 'Danger') {
-                    emoji = '🟡';
-                  } else if (snapshot.data!.docs[index]['level'] == 'Warning') {
                     emoji = '🔴';
+                  } else if (snapshot.data!.docs[index]['level'] == 'Warning') {
+                    emoji = '🟡';
                   }
+
                   DocumentSnapshot noti = snapshot.data!.docs[index];
+
                   return ListTile(
                     leading: Container(
                         height: 30,
@@ -89,15 +107,12 @@ class _NotiPageState extends State<NotiPage> {
                             Image.asset(iconSelector(noti['type'])),
                           ],
                         )),
-                    // iconSelector(noti['type'])),
-                    // leading: Text(noti['type']),
-                    // leading: Icon(noti['type']),
                     title: Text(
-                      '${noti['level']}$emoji Your ${noti['type']} is ${noti['data']}',
+                      '${noti['level']}$emoji Your ${textTranslate(noti['type'])} is ${noti['data']}',
                       style: TextStyle(fontFamily: 'Inter'),
                     ),
                     subtitle: Text(
-                      noti['time'],
+                      addLeadingZerosToTime(noti['time']),
                       style: TextStyle(fontFamily: 'Inter'),
                     ),
                   );

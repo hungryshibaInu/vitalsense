@@ -32,6 +32,7 @@ DateTime getFirstDayOfMonth(DateTime date) {
 }
 
 DateTime getLastDayOfMonth(DateTime date) {
+  // print(DateTime(date.year, date.month + 1, 0));
   return DateTime(date.year, date.month + 1, 0);
 }
 
@@ -71,7 +72,7 @@ class _HistoryPage extends State<HistoryPage> {
   String collection = 'eachDay';
   // String _date = '2022-01-01';
   // DateTime _date = DateTime.parse('2022-01-01');
-  String _date = '2023-03-25';
+  String _date = '2023-03-26';
 
   DateTime _selectedDate = DateTime.now();
 
@@ -565,7 +566,9 @@ class _ChartState extends State<Chart> {
                   sideTitles: SideTitles(
                       getTitlesWidget: (value, meta) {
                         return Text(
-                            barListvalue[value.toInt()].name.substring(5));
+                          barListvalue[value.toInt()].name.substring(5),
+                          style: TextStyle(fontSize: 11),
+                        );
                         // return Text('5/${value.toInt() + 10}');
                         // return Text(widget.date.substring(5));
                         // return Text(barListvalue.length.toString());
@@ -586,14 +589,15 @@ class _ChartState extends State<Chart> {
                     style: TextStyle(
                         // fontFamily: 'Inter',
                         fontWeight: FontWeight.normal,
-                        fontSize: 12),
+                        fontSize: 11),
                   ),
                   axisNameSize: 30,
                   sideTitles: SideTitles(
                       getTitlesWidget: (value, meta) {
                         return Text(
                           '${value.toInt()}',
-                          style: const TextStyle(fontFamily: 'Inter'),
+                          style: const TextStyle(
+                              fontFamily: 'Inter', fontSize: 12),
                         );
                       },
                       showTitles: true)),
@@ -711,13 +715,19 @@ class _WarninglogState extends State<Warninglog> {
                     final Map<String, dynamic>? data = docs[index].data();
 
                     return ListTile(
-                      leading: Text(
-                        data!['time'],
-                        // '${test.add(Duration(days: 7)).toString()}',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Inter',
-                            color: Color.fromARGB(255, 128, 127, 127)),
+                      leading: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            data!['time'],
+                            // '${test.add(Duration(days: 7)).toString()}',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Inter',
+                                color: Color.fromARGB(255, 128, 127, 127)),
+                          ),
+                        ],
                       ),
                       title: Row(
                         children: [

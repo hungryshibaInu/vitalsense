@@ -162,7 +162,10 @@ class bodytempCardState extends State<bodytempCard> {
                               borderRadius: const BorderRadius.all(
                                   Radius.elliptical(29, 29)),
                             ),
-                            child: Image.asset('assets/images/tempicon.png')))
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Image.asset('assets/images/tempicon.png'),
+                            )))
                   ]))),
         ]));
   }

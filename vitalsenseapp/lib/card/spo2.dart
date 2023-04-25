@@ -151,7 +151,13 @@ class _spo2CardState extends State<spo2Card> {
                               borderRadius: const BorderRadius.all(
                                   Radius.elliptical(29, 29)),
                             ),
-                            child: Image.asset('assets/images/o2icon.png')))
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Image.asset(
+                                'assets/images/o2icon.png',
+                                fit: BoxFit.contain,
+                              ),
+                            )))
                   ]))),
         ]));
   }
