@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vitalsenseapp/pages/history.dart';
+import '../function/textTranslate.dart';
 
 String iconSelector(String _type) {
   switch (_type) {
@@ -17,20 +18,20 @@ String iconSelector(String _type) {
   }
 }
 
-String textTranslate(String _type) {
-  switch (_type) {
-    case 'Hr':
-      return 'Heart Rate';
-    case 'Spo2':
-      return 'Oxygen Saturation';
-    case 'BodyTemp':
-      return 'Body Temperature';
-    case 'RR':
-      return 'Respiratory Rate';
-    default:
-      return '???';
-  }
-}
+// String textTranslate(String _type) {
+//   switch (_type) {
+//     case 'Hr':
+//       return 'Heart Rate';
+//     case 'Spo2':
+//       return 'Oxygen Saturation';
+//     case 'BodyTemp':
+//       return 'Body Temperature';
+//     case 'RR':
+//       return 'Respiratory Rate';
+//     default:
+//       return '???';
+//   }
+// }
 
 // class Notification {
 //   final Icon type;

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:vitalsenseapp/function/changecolorfunc.dart';
 
 // var colorlist = [
@@ -8,19 +9,36 @@ import 'package:vitalsenseapp/function/changecolorfunc.dart';
 //   const Color.fromRGBO(241, 66, 57, 1),
 // ];
 
-Widget getWarnCritCount(String date, String level) {
-  return FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-    future: FirebaseFirestore.instance
+Widget getWarnCritCount(String date, String level, String collection) {
+  Query<Map<String, dynamic>> streamcollection = FirebaseFirestore.instance
+      .collection('error')
+      .where('date', isEqualTo: date)
+      .where('level', isEqualTo: level);
+  // print(date);
+  if (collection == 'week') {
+    streamcollection = FirebaseFirestore.instance
         .collection('error')
-        .where('date', isEqualTo: date)
-        .where('level', isEqualTo: level)
-        .get(),
+        .where('date',
+            isGreaterThanOrEqualTo: date,
+            isLessThanOrEqualTo: (DateTime.parse(date).add(Duration(days: 6)))
+                .toString()
+                .substring(0, 10))
+        .where('level', isEqualTo: level);
+
+    print(
+        'add date:${DateTime.parse(date).add(Duration(days: 6)).toString().substring(0, 10)} level: $level');
+    print('date: $date');
+    // print(collection);
+  }
+  return FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+    future: streamcollection.get(),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.done) {
         // if (snapshot.hasError) {
         //   return Text('Error: ${snapshot.error}');
         // } else {
         int? dataSize = snapshot.data?.size;
+        print(dataSize);
 
         if (level == 'Warning') {
           return Text('$dataSize warning(s), ',
@@ -78,6 +96,7 @@ class HistoryCard extends StatelessWidget {
   final String rrvalue;
   final String skintempvalue;
   final String level;
+  final String collection;
 
   const HistoryCard(
       {super.key,
@@ -88,7 +107,8 @@ class HistoryCard extends StatelessWidget {
       this.rrvalue = '0',
       this.skintempvalue = '0',
       this.spo2value = '0',
-      required this.level});
+      required this.level,
+      this.collection = '0'});
 
   @override
   Widget build(BuildContext context) {
@@ -119,8 +139,8 @@ class HistoryCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    getWarnCritCount(date, 'Warning'),
-                    getWarnCritCount(date, 'Danger'),
+                    getWarnCritCount(date, 'Warning', collection),
+                    getWarnCritCount(date, 'Danger', collection),
                   ],
                 ),
 

@@ -10,20 +10,21 @@ import 'package:intl/intl.dart';
 import 'login.dart';
 
 // import 'package:vitalsenseapp/pages/home.dart';
-Future<String> getWarningCount(String level, String date) async {
-  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-      .collection('error')
-      .where('date', isEqualTo: date)
-      .where('level', isEqualTo: level)
-      .get();
+// Future<String> getWarningCount(String level, String date) async {
+//   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+//       .collection('error')
+//       .where('date', isEqualTo: date)
+//       .where('level', isEqualTo: level)
+//       .get();
 
-  return querySnapshot.size.toString();
-}
+//   return querySnapshot.size.toString();
+// }
 
 DateTime getSundayOfWeek(DateTime date) {
   if (DateFormat('EEEE').format(date) == 'Sunday') {
     date = date.add(Duration(days: 1));
   }
+  // print(date.subtract(Duration(days: date.weekday)));
   return date.subtract(Duration(days: date.weekday));
 }
 
@@ -390,6 +391,7 @@ class _HistoryPage extends State<HistoryPage> {
                                     date: (snapshot.data!.docs[index]['date'])
                                         .toString(),
                                     level: 'Danger',
+                                    collection: collection,
                                     // warncount:  await getWarningCount('Warning', (snapshot.data!
                                     //               .docs[index]['date'])
                                     //           .toString()),
@@ -713,6 +715,41 @@ class _WarninglogState extends State<Warninglog> {
                   itemCount: docs.length,
                   itemBuilder: (BuildContext context, int index) {
                     final Map<String, dynamic>? data = docs[index].data();
+
+                    if (widget.collection == 'week') {
+                      return ListTile(
+                        leading: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${data!['date'].substring(5)} ${data['time']}',
+                              // '${test.add(Duration(days: 7)).toString()}',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Inter',
+                                  color: Color.fromARGB(255, 128, 127, 127)),
+                            ),
+                          ],
+                        ),
+                        title: Row(
+                          children: [
+                            Text(
+                              '${data['type']}: ',
+                              style: const TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16),
+                            ),
+                            Text(data['data'],
+                                style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    color: changelogColor(data['level']))),
+                          ],
+                        ),
+                        // subtitle: Text(data['type']),
+                      );
+                    }
 
                     return ListTile(
                       leading: Column(
